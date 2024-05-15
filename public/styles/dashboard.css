@@ -1,0 +1,68 @@
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+}
+
+.page-item {
+    margin: 0 2px; /* Adjust spacing between page numbers */
+}
+
+.page-link {
+    background-color: #0369a1;
+    border: 1px solid #bae6fd;
+    color: #ccfbf1;
+    cursor: pointer;
+    padding: 5px 10px;
+}
+
+.page-link:hover {
+    background-color: #e9ecef;
+    border-color: #bae6fd;
+    color:#06b6d4;
+}
+
+/* Active page number styling */
+.page-item.active .page-link {
+    background-color: #e0f2fe;
+    border-color: #bae6fd;
+    color: #06b6d4;
+}
+
+/* Optional: disable text selection */
+.page-link {
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+}
+
+/* Align pagination center */
+.pagination {
+    justify-content: center; /* Center the pagination */
+}
+.table-responsive {
+    width: 100%;
+    overflow-x: auto; /* Permet un défilement horizontal si nécessaire */
+}
+
+.table {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 1rem;
+    background-color: transparent;
+}
+
+.table th,
+.table td {
+    white-space: nowrap; /* Empêche le texte de passer à la ligne */
+}
+
+.table th {
+    position: sticky;
+    top: 0;
+    background-color: #a5f3fc;
+    z-index: 10;
+}
+
+

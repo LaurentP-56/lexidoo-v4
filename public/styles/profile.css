@@ -1,0 +1,346 @@
+.containere {
+    background: #ffffff;
+    width: 75%;
+    height: 420px;
+    margin: 0 auto;
+    position: relative;
+    margin-top: 10%;
+    box-shadow: 2px 5px 20px rgba(119, 119, 119, 0.5);
+}
+
+.CTAS {
+    float: right;
+    margin-right: 12px;
+    margin-top: 12px;
+    font-family: "Nunito Sans", sans-serif;
+    color: #3dbb3d;
+    font-weight: 900;
+    font-size: 1.5em;
+    letter-spacing: 1px;
+}
+
+.CTA {
+    width: 100px;
+    height: 40px;
+    right: -30px;
+    bottom: 0;
+    margin-bottom: 50px;
+    position: absolute;
+    z-index: 1;
+    background: #7ed386;
+    font-size: 1em;
+    transform: rotate(-90deg);
+    transition: all 0.5s ease-in-out;
+    cursor: pointer;
+}
+.CTA h1 {
+    color: #ffffff;
+    margin-top: 10px;
+    margin-left: 9px;
+}
+.CTA:hover {
+    background: #3fb6a8;
+    transform: scale(1.1);
+}
+
+.leftbox {
+    float: left;
+    top: -5%;
+    left: 5%;
+    position: absolute;
+    width: 15em;
+    height: 110%;
+    background: #7ed386;
+    box-shadow: 3px 3px 10px rgba(119, 119, 119, 0.5);
+}
+
+menu a {
+    list-style: none;
+    padding: 35px;
+    color: #ffffff;
+    font-size: 1.1em;
+    display: block;
+    transition: all 0.3s ease-in-out;
+}
+menu a:hover {
+    color: #3fb6a8;
+    transform: scale(1.2);
+    cursor: pointer;
+}
+menu a:first-child {
+    margin-top: 7px;
+}
+
+.active {
+    color: #3fb6a8;
+}
+
+.rightbox {
+    float: right;
+    width: 60%;
+    height: 100%;
+}
+
+.profile,
+.payment,
+.subscription,
+.privacy,
+.settings {
+    transition: opacity 0.5s ease-in;
+    position: absolute;
+    /*width: 70%;*/
+}
+
+h1 {
+    font-family: "Montserrat", sans-serif;
+    color: #7ed386;
+    font-size: 1em;
+    margin-top: 40px;
+    margin-bottom: 35px;
+}
+
+h2 {
+    color: #777777;
+    font-family: "Roboto", sans-serif;
+    width: 80%;
+    text-transform: uppercase;
+    font-size: 8px;
+    letter-spacing: 1px;
+    margin-left: 2px;
+}
+
+p {
+    border-width: 1px;
+    border-style: solid;
+    border-image: linear-gradient(to right, #3fb6a8, rgba(126, 211, 134, 0.5)) 1 0%;
+    border-top: 0;
+    width: 80%;
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.7em;
+    padding: 7px 0;
+    color: #070707;
+}
+
+
+
+.btn {
+    float: right;
+    font-family: "Roboto", sans-serif;
+    text-transform: uppercase;
+    font-size: 10px;
+    border: none;
+    color: #3fb6a8;
+}
+
+.btn:hover {
+    text-decoration: underline;
+    font-weight: 900;
+}
+
+input {
+    border: 1px solid #dddddd;
+    font-family: "Roboto", sans-serif;
+    padding: 2px;
+    margin: 0;
+}
+
+.privacy h2 {
+    margin-top: 25px;
+}
+
+.settings h2 {
+    margin-top: 25px;
+}
+
+.noshow {
+    opacity: 0;
+}
+
+footer {
+    position: absolute;
+    width: 20%;
+    bottom: 0;
+    right: -20px;
+    text-align: right;
+    font-size: 0.8em;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-family: "Roboto", sans-serif;
+}
+footer p {
+    border: none;
+    padding: 0;
+}
+footer a {
+    color: #ffffff;
+    text-decoration: none;
+}
+footer a:hover {
+    color: #7d7d7d;
+}
+/* Onglet */
+.tabs {
+    width: 45em;
+    height: 80px;
+    margin: 0 auto;
+    display: flex; /* Remplace le float:left pour un alignement en flexbox */
+    justify-content: space-between; /* Distribue les boutons uniformément */
+    list-style: none;
+    padding: 0;
+}
+.tabs button {
+    position: relative;
+    display: block;
+    height: 4em;
+    margin-top: 20px;
+    padding: 10px 0;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 18px;
+    text-align: center;
+    text-decoration: none;
+    color: #ffffff;
+    background: #6edeef;
+    box-shadow: 8px 12px 25px 2px rgba(0,0,0,0.4);
+    border: 0px solid #000000;
+    transition: padding 0.2s ease, margin 0.2s ease;
+    cursor: pointer;
+    width: 100%; /* Assure que tous les boutons ont la même largeur */
+}
+
+.tabs button:first-child {
+    z-index: 3;
+    border-top-left-radius: 8px;
+}
+.tabs button:nth-child(2) {
+    z-index: 2;
+}
+.tabs button:last-child {
+    z-index: 1;
+    box-shadow: 2px 8px 25px -2px rgba(0,0,0,0.3);
+    border-top-right-radius: 8px;
+}
+.tabs button:hover {
+    margin: 10px 0 0 0;
+    padding: 15px 0; /* Ajustez selon le besoin pour l'effet au survol */
+}
+.tabs button.active {
+    margin: 5px 0 0 0;
+    padding: 15px 0;
+    background: #7ed386;
+    color: #ffffff;
+    z-index: 4;
+}
+
+.group:before,
+.group:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+.group:after {
+    clear: both;
+}
+#content {
+    width: 390px;
+    height: 200px;
+    margin: 0 auto;
+    background: #545f60;
+    -webkit-box-shadow: 2px 8px 25px -2px rgba(0,0,0,0.3);
+    -moz-box-shadow: 2px 8px 25px -2px rgba(0,0,0,0.3);
+    box-shadow: 2px 8px 25px -2px rgba(0,0,0,0.3);
+    -webkit-border-bottom-right-radius: 8px;
+    -webkit-border-bottom-left-radius: 8px;
+    -moz-border-radius-bottomright: 8px;
+    -moz-border-radius-bottomleft: 8px;
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+#one {
+
+}
+#two {
+
+}
+#three {
+
+}
+/* Price card */
+
+.price-table {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width: min(1600px, 100%);
+    margin: auto;
+}
+
+.price-card {
+    flex: 1;
+    max-width: 360px;
+    background: #f1f1f1;
+    margin: 20px 10px;
+    text-align: center;
+    overflow: hidden;
+    cursor: pointer;
+    transition: .2s linear;
+    color: #2d2d2d;
+}
+.price-carde {
+    flex: 1;
+    max-width: 360px;
+    background: #f1f1f1;
+    margin: 20px 10px;
+    text-align: center;
+    overflow: hidden;
+    cursor: pointer;
+    transition: .2s linear;
+    color: #2d2d2d;
+}
+
+.price-card-header {
+    background: #0fbcf9;
+    display: inline-block;
+    padding: 12px 30px;
+    color: #f1f1f1;
+    font-size: 16px;
+    border-radius: 0 0 20px 20px;
+    text-transform: uppercase;
+    font-weight: 600;
+    transition: .4s linear;
+}
+
+.price-card:hover .price-card-header {
+    box-shadow: 0 0 0 26em #0fbcf9;
+}
+
+.price {
+    font-size: 40px;
+    margin: 40px 0 0 0;
+    color: #0fbcf9;
+    transition: .2s linear;
+}
+
+.price sup,
+.price span {
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.price-card:hover,
+.price-card:hover .price {
+    color: #f1f1f1;
+}
+
+.price-card li {
+    font-size: 16px;
+    padding: 10px 0;
+    text-transform: uppercase;
+}
+
+.order-btn {
+    display: inline-block;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    border: 2px solid #0fbcf9;
+    color: #0fbcf9;
+    padding: 18px 40px;
+}
