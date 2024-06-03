@@ -1,15 +1,15 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\UsersController;
-use App\Http\Controllers\TarifsController;
-use App\Http\Controllers\LevelsController;
-use App\Http\Controllers\ThemesController;
 use App\Http\Controllers\CategoriesController;
-use App\Http\Controllers\MotsController;
 use App\Http\Controllers\JeuController;
+use App\Http\Controllers\LevelsController;
+use App\Http\Controllers\MotsController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TarifsController;
+use App\Http\Controllers\ThemesController;
+use App\Http\Controllers\UsersController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +20,7 @@ use App\Http\Controllers\JeuController;
 | routes are loaded by the RouteServiceProvider and all of them will
 | be assigned to the "web" middleware group. Make something great!
 |
-*/
+ */
 
 Route::get('/', function () {
     return view('welcome');
@@ -41,8 +41,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/dashboard/jeu/save-game-setup', [GameController::class, 'saveGameSetup'])->name('save.game.setup');
     Route::get('/dashboard/jeu/play-game', [GameController::class, 'playGame'])->name('play.game');
 
-
+    Route::post('get_words', [JeuController::class, 'getWords'])->name('jeu.mots');
 });
+
 Route::middleware(['auth', 'isAdmin'])->group(function () {
     // Dashboard
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
@@ -53,7 +54,7 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
         Route::post('/update-premium/{user}', [UsersController::class, 'updatePremiumStatus'])->name('update-premium');
     });
 
-// Tarifs
+    // Tarifs
     Route::prefix('admin/tarifs')->name('admin.tarifs.')->group(function () {
         Route::get('/', [TarifsController::class, 'index'])->name('index');
         Route::get('/create', [TarifsController::class, 'create'])->name('create');
@@ -73,7 +74,7 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
         Route::delete('/{level}', [LevelsController::class, 'destroy'])->name('destroy');
     });
 
-// Correctif: Assurez-vous que la convention de nommage est cohérente
+    // Correctif: Assurez-vous que la convention de nommage est cohérente
     Route::prefix('admin/theme')->name('admin.theme.')->group(function () {
         Route::get('/', [ThemesController::class, 'index'])->name('index');
         Route::get('/create', [ThemesController::class, 'create'])->name('create');
@@ -82,7 +83,6 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
         Route::put('/{theme}', [ThemesController::class, 'update'])->name('update');
         Route::delete('/{theme}', [ThemesController::class, 'destroy'])->name('destroy');
     });
-
 
     // Categories
     Route::prefix('admin/categories')->name('admin.categories.')->group(function () {
@@ -105,9 +105,7 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
         Route::post('/import', [MotsController::class, 'import'])->name('import');
     });
 });
+
 Route::get('/tarifs', [ProfileController::class, 'showTarifs']);
-require __DIR__.'/auth.php';
 
-
-
-
+require __DIR__ . '/auth.php';

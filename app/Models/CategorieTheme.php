@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CategorieTheme extends Model
 {
-    protected $table = 'categorie_themes'; // Assurez-vous que le nom de la table correspond à votre base de données
+    protected $table    = 'categorie_themes'; // Assurez-vous que le nom de la table correspond à votre base de données
     protected $fillable = ['nom', 'theme_id']; // Les attributs que vous pouvez assigner massivement
 
     /**
