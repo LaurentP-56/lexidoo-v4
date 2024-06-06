@@ -133,6 +133,13 @@
                             </div>
 
                             @if ($showAnswer == true)
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="bg-body-tertiary p-5 rounded">
+                                            <p class="lead"> {{ $currentTranslation }}</p>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="d-flex gap-2 justify-content-center py-5">
                                     <button class="btn btn-success rounded-pill px-3"
                                         wire:click="updateProbability('knew')" type="button">

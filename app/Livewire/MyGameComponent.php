@@ -33,11 +33,12 @@ class MyGameComponent extends Component
     public $userId        = null;
     public $step          = null;
 
-    public $finalWords    = null;
-    public $currentWord   = null;
-    public $currentWordId = 0;
-    public $showAnswer    = false;
-    public $allMots       = null;
+    public $finalWords         = null;
+    public $currentWord        = null;
+    public $currentWordId      = 0;
+    public $currentTranslation = null;
+    public $showAnswer         = false;
+    public $allMots            = null;
 
     /**
      * Mount the component.
@@ -100,6 +101,8 @@ class MyGameComponent extends Component
 
         if ($this->levelId != '' && $this->themeId != '' && $this->subThemeId != '' && $this->categoryId != '' && $this->subCategoryId != '' && $this->tempsOption != '') {
 
+            $this->finalWord();
+
             $levelId       = $this->levelId;
             $themeId       = $this->themeId;
             $subThemeId    = $this->subThemeId;
@@ -120,8 +123,8 @@ class MyGameComponent extends Component
             $motBySousCategories = DB::table('mot_sous_categorie_theme')->where('sous_categorie_theme_id', $subCategoryId)->pluck('mot_id')->all();
 
             // merge and take only unique values
-            $this->allMots    = array_unique(array_merge($motByLevel, $motBySousTheme, $motByCategories, $motBySousCategories));
-            $this->finalWords = Mot::select("id", "nom")->whereIn('id', $this->allMots)->pluck('nom', 'id')->all();
+            //$this->allMots = array_unique(array_merge($motByLevel, $motBySousTheme, $motByCategories, $motBySousCategories));
+            $this->allMots = array_unique($motBySousCategories + $motByCategories + $motBySousTheme + $motByLevel);
             $this->getCurrentWord();
             $this->step++;
         }
@@ -190,11 +193,27 @@ class MyGameComponent extends Component
      */
     public function getCurrentWord()
     {
-        $randId = array_rand($this->finalWords, 1);
+        $randId = array_rand($this->allMots, 1);
         if (isset($this->finalWords[$randId])) {
-            $this->currentWord   = $this->finalWords[$randId];
-            $this->currentWordId = $randId;
+            $final                    = $this->finalWords[$randId];
+            $this->currentWord        = $final['nom'];
+            $this->currentTranslation = $final['traduction'];
+            $this->currentWordId      = $final['id'];
             unset($this->finalWords[$randId]);
+        }
+    }
+
+    /**
+     * Gérer la fin du jeu
+     *
+     * @return void
+     * @author Bhavesh Vyas
+     */
+    public function finalWord()
+    {
+        $finalWords = Mot::select("id", "nom", "traduction")->get()->toArray();
+        foreach ($finalWords as $key => $value) {
+            $this->finalWords[$value['id']] = $value;
         }
     }
 
