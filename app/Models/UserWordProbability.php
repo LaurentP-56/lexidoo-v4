@@ -10,11 +10,13 @@ class UserWordProbability extends Model
 
     protected $fillable = ['user_id', 'mot_id', 'probability_of_appearance'];
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function mot() {
+    public function mot()
+    {
         return $this->belongsTo(Mot::class);
     }
 }

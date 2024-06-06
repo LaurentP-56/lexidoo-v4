@@ -8,7 +8,6 @@ use App\Services\JeuService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class JeuController extends Controller
 {
@@ -107,8 +106,6 @@ class JeuController extends Controller
         $userId           = Auth::id();
 
         if ($levelId != '' && $themeId != '' && $sousThemeId != '' && $categoriesId != '' && $sousCategoriesId != '' && $tempsId != '') {
-
-            Log::info("JeuController@getWords");
 
             // By level
             $motByLevel = Mot::where('level', "like", "%{$levelId}%")->pluck('id')->all();

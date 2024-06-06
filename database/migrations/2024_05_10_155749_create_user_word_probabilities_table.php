@@ -13,10 +13,19 @@ return new class extends Migration
     {
         Schema::create('user_word_probabilities', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('mot_id')->constrained('mots')->onDelete('cascade'); // Assurez-vous que 'mots' est le nom correct de votre table de mots.
+            $table->bigInteger('user_id')->unsigned()->nullable();
+            $table->bigInteger('mot_id')->unsigned()->nullable();
             $table->integer('probability_of_appearance')->default(50);
             $table->timestamps();
+
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
+            $table->foreign('mot_id')
+                ->references('id')
+                ->on('mots')
+                ->onDelete('cascade');
         });
 
     }

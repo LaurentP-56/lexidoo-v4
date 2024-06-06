@@ -9,6 +9,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TarifsController;
 use App\Http\Controllers\ThemesController;
 use App\Http\Controllers\UsersController;
+use App\Livewire\MyGameComponent;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -35,7 +36,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('/dashboard/jeu', [JeuController::class, 'index'])->name('jeu.index');
+
+    Route::get('/dashboard/jeu', MyGameComponent::class)->name('jeu.index');
+
+    //Route::get('/dashboard/jeu', [JeuController::class, 'index'])->name('jeu.index');
     Route::post('/dashboard/jeu/submit', [JeuController::class, 'submit'])->name('jeu.submit');
     // Dans web.php
     Route::post('/dashboard/jeu/save-game-setup', [GameController::class, 'saveGameSetup'])->name('save.game.setup');
