@@ -8,7 +8,7 @@ class Theme extends Model
 {
     protected $table = 'themes';
 
-    protected $fillable = ['nom', 'parent_id']; // 'parent_id' pour gérer la relation parent/enfant des thèmes/sous-thèmes
+    protected $fillable = ['name']; // 'parent_id' pour gérer la relation parent/enfant des thèmes/sous-thèmes
 
     public function mots()
     {
