@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\SubCategory;
 use App\Models\Theme;
 use Illuminate\Http\Request;
 
@@ -18,7 +19,8 @@ class SubCategoryController extends Controller
     {
         $categories = Category::all();
         $themes     = Theme::all();
-        return view('sub-category.index', compact('categories', 'themes'));
+        $subCategories = SubCategory::with('category','theme')->paginate(20);          
+        return view('admin.sub-category.index', compact('subCategories', 'categories', 'themes'));
     }
 
     /**
@@ -31,13 +33,13 @@ class SubCategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nom'          => 'required',
+            'name'          => 'required',
             'theme_id'     => 'required',
-            'categorie_id' => 'required',
+            'category_id' => 'required',
         ]);
 
         Category::create($request->all());
-        return redirect()->route('sub-category.index')->with('success', 'Sub Category created successfully.');
+        return redirect()->route('admin.sub-category.index')->with('success', 'Sub Category created successfully.');
     }
 
     /**
@@ -50,7 +52,7 @@ class SubCategoryController extends Controller
     public function edit(Category $categorie)
     {
         $themes = Theme::all();
-        return view('sub-category.edit', compact('categorie', 'themes'));
+        return view('admin.sub-category.edit', compact('categorie', 'themes'));
     }
 
     /**
@@ -70,7 +72,7 @@ class SubCategoryController extends Controller
         ]);
 
         $categorie->update($request->all());
-        return redirect()->route('sub-category.index')->with('success', 'Sub Category updated successfully.');
+        return redirect()->route('admin.sub-category.index')->with('success', 'Sub Category updated successfully.');
     }
 
     /**
@@ -84,7 +86,7 @@ class SubCategoryController extends Controller
     public function destroy(Category $categorie)
     {
         $categorie->delete();
-        return redirect()->route('sub-category.index')->with('success', 'Sub Category deleted successfully.');
+        return redirect()->route('admin.sub-category.index')->with('success', 'Sub Category deleted successfully.');
     }
 
     /**
@@ -96,7 +98,7 @@ class SubCategoryController extends Controller
     public function create()
     {
         $themes = Theme::all();
-        return view('sub-category.create', compact('themes'));
+        return view('admin.sub-category.create', compact('themes'));
     }
 
     /**
@@ -108,6 +110,12 @@ class SubCategoryController extends Controller
      */
     public function show(Category $categorie)
     {
-        return view('sub-category.show', compact('categorie'));
+        return view('admin.sub-category.show', compact('categorie'));
+    }
+
+    public function getCategories()
+    {
+        dd('here');
+        //return Category::pluck('name', 'id')->where('theme_id',)->all();
     }
 }

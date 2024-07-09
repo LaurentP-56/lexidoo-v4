@@ -7,7 +7,7 @@
                 <div class="w-full max-w-lg mx-auto">
                     <h2 class="text-xl font-semibold mb-6">Modifier le thème : {{ $category->name }}</h2>
 
-                    <form action="{{ route('admin.sub_categories..update', $category->id) }}" method="POST"
+                    <form action="{{ route('admin.sub_category.update', $category->id) }}" method="POST"
                         class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                         @csrf
                         @method('PUT')

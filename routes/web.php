@@ -6,6 +6,7 @@ use App\Http\Controllers\JeuController;
 use App\Http\Controllers\LevelsController;
 use App\Http\Controllers\MotsController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\TarifsController;
 use App\Http\Controllers\ThemesController;
 use App\Http\Controllers\UsersController;
@@ -112,15 +113,25 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
             Route::delete('/{categorie}', [CategoriesController::class, 'destroy'])->name('destroy');
         });
 
+        //Sub Category -- 09-07-2024
+        Route::prefix('sub_category')->name('sub_category.')->group(function () {
+            Route::get('/', [SubCategoryController::class, 'index'])->name('index');
+            Route::get('/create', [SubCategoryController::class, 'create'])->name('create');
+            Route::post('/', [SubCategoryController::class, 'store'])->name('store');
+            Route::get('/{sub_category}/edit', [SubCategoryController::class, 'edit'])->name('edit');
+            Route::put('/{sub_category}', [SubCategoryController::class, 'update'])->name('update');
+            Route::delete('/{sub_category}', [SubCategoryController::class, 'destroy'])->name('destroy');
+        });
+
         // Sub Categories
-        Route::prefix('sub_categories')->name('sub_categories.')->group(function () {
+        /*Route::prefix('sub_categories')->name('sub_categories.')->group(function () {
             Route::get('/', [CategoriesController::class, 'index'])->name('index');
             Route::get('/create', [CategoriesController::class, 'create'])->name('create');
             Route::post('/', [CategoriesController::class, 'store'])->name('store');
             Route::get('/{categorie}/edit', [CategoriesController::class, 'edit'])->name('edit');
             Route::put('/{categorie}', [CategoriesController::class, 'update'])->name('update');
             Route::delete('/{categorie}', [CategoriesController::class, 'destroy'])->name('destroy');
-        });
+        });*/
 
         // Mots
         Route::prefix('mots')->name('mots.')->group(function () {

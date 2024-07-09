@@ -3,9 +3,9 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="p-6 bg-sky-800/20 border-b border-gray-200">
                 <div class="flex justify-between">
-                    <h2 class="text-xl text-center text-black font-bold mb-2">Liste des Catégories</h2>
+                    <h2 class="text-xl text-center text-black font-bold mb-2">Liste des sous-Catégories</h2>
                     <a href="{{ route('admin.sub_category.create') }}"
-                        class="px-4 py-2 bg-blue-500 text-white rounded">Ajouter une Catégorie</a>
+                        class="px-4 py-2 bg-blue-500 text-white rounded">Ajouter une sous-Catégorie</a>
                 </div>
 
                 <table class="table-auto w-full mt-4">
@@ -22,13 +22,13 @@
                             <tr class="{{ $loop->iteration % 2 == 0 ? 'bg-teal-500' : 'bg-sky-500' }}">
 
                                 <td class="pt-2 pb-2 text-xs text-white">
-                                    {{ $subCategory->nom }}
+                                    {{ $subCategory->name }}
                                 </td>
                                 <td class="pt-2 pb-2 text-xs text-white">
                                     {{ $subCategory->theme->name ?? 'Non spécifié' }}
                                 </td>
                                 <td class="pt-2 pb-2 text-xs text-white">
-                                    {{ $subCategory->category->nom ?? 'Aucune' }}
+                                    {{ $subCategory->category->name ?? 'Aucune' }}
                                 </td>
                                 <td class="pt-2 pb-2 text-xs text-white">
                                     <a href="{{ route('admin.sub_category.edit', $subCategory->id) }}"

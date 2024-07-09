@@ -8,14 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class SubCategory extends Model
 {
-    protected $table = 'sub_category'; // Assurez-vous que le nom de la table correspond à votre base de données
+    protected $table = 'sub_categories'; // Assurez-vous que le nom de la table correspond à votre base de données
 
-    protected $fillable = ['nom', 'theme_id', 'category_id']; // Les attributs que vous pouvez assigner massivement
+    protected $fillable = ['name', 'theme_id', 'category_id']; // Les attributs que vous pouvez assigner massivement
 
     /**
      * Relation avec Category.
      */
-    public function categorie()
+    public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
