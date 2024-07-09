@@ -17,10 +17,8 @@ class SubCategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
-        $themes     = Theme::all();
-        $subCategories = SubCategory::with('category','theme')->paginate(20);          
-        return view('admin.sub-category.index', compact('subCategories', 'categories', 'themes'));
+        $subCategories = SubCategory::with('category', 'theme')->paginate(20);
+        return view('admin.sub-category.index', compact('subCategories'));
     }
 
     /**
@@ -33,8 +31,8 @@ class SubCategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'          => 'required',
-            'theme_id'     => 'required',
+            'name'        => 'required',
+            'theme_id'    => 'required',
             'category_id' => 'required',
         ]);
 
@@ -102,20 +100,17 @@ class SubCategoryController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Get category by theme id
      *
-     * @param Category $categorie
-     * @return void
+     * @param Request $request
+     * @return response
      * @author Bhavesh Vyas
      */
-    public function show(Category $categorie)
+    public function getCategory(Request $request)
     {
-        return view('admin.sub-category.show', compact('categorie'));
-    }
-
-    public function getCategories()
-    {
-        dd('here');
-        //return Category::pluck('name', 'id')->where('theme_id',)->all();
+        return response([
+            'success'    => true,
+            'categories' => getCategory($request->theme_id),
+        ], 200);
     }
 }

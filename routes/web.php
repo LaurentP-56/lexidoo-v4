@@ -121,16 +121,18 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
             Route::get('/{sub_category}/edit', [SubCategoryController::class, 'edit'])->name('edit');
             Route::put('/{sub_category}', [SubCategoryController::class, 'update'])->name('update');
             Route::delete('/{sub_category}', [SubCategoryController::class, 'destroy'])->name('destroy');
+
+            Route::post('getCategory', [SubCategoryController::class, 'getCategory'])->name('getCategory');
         });
 
         // Sub Categories
         /*Route::prefix('sub_categories')->name('sub_categories.')->group(function () {
-            Route::get('/', [CategoriesController::class, 'index'])->name('index');
-            Route::get('/create', [CategoriesController::class, 'create'])->name('create');
-            Route::post('/', [CategoriesController::class, 'store'])->name('store');
-            Route::get('/{categorie}/edit', [CategoriesController::class, 'edit'])->name('edit');
-            Route::put('/{categorie}', [CategoriesController::class, 'update'])->name('update');
-            Route::delete('/{categorie}', [CategoriesController::class, 'destroy'])->name('destroy');
+        Route::get('/', [CategoriesController::class, 'index'])->name('index');
+        Route::get('/create', [CategoriesController::class, 'create'])->name('create');
+        Route::post('/', [CategoriesController::class, 'store'])->name('store');
+        Route::get('/{categorie}/edit', [CategoriesController::class, 'edit'])->name('edit');
+        Route::put('/{categorie}', [CategoriesController::class, 'update'])->name('update');
+        Route::delete('/{categorie}', [CategoriesController::class, 'destroy'])->name('destroy');
         });*/
 
         // Mots

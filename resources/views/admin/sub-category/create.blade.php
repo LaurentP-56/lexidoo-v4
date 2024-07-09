@@ -23,7 +23,7 @@
                                 Thème
                             </label>
                             <select name="theme_id" id="theme_id"
-                                class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                class="themeId shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                                 <option value="">Sélectionnez un thème</option>
                                 @foreach (getThemes() as $themeId => $themeName)
                                     <option value="{{ $themeId }}">{{ $themeName }}</option>
@@ -36,11 +36,8 @@
                                 Catégorie
                             </label>
                             <select name="category_id" id="category_id"
-                                class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                class="categoryData shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                                 <option value="">Sélectionnez un Catégorie</option>
-                                @foreach (getThemes() as $themeId => $themeName)
-                                    <option value="{{ $themeId }}">{{ $themeName }}</option>
-                                @endforeach
                             </select>
                         </div>
 
@@ -61,3 +58,7 @@
         </div>
     </div>
 </x-adminapp>
+
+@push('scripts')
+    <script src="{{ asset('js/subcategory.js?v=' . time()) }}"></script>
+@endpush
