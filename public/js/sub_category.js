@@ -3,7 +3,7 @@ $(document).ready(function () {
         var themeId = $(this).val();
         $(".categoryData").find("option").not(":first").remove();
         $.ajax({
-            url: publicPath + "/admin/sub_category/getCategory",
+            url: publicPath + "admin/sub_category/getCategory",
             type: "POST",
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),

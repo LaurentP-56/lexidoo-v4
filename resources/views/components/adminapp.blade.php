@@ -46,6 +46,8 @@
         var publicPath = "{{ asset('') }}";
     </script>
     <script src="{{ asset('/js/userlist.js') }}"></script>
+    <!-- jquery cdn -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     @stack('scripts')
 </body>
 

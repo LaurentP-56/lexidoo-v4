@@ -36,55 +36,56 @@ class SubCategoryController extends Controller
             'category_id' => 'required',
         ]);
 
-        Category::create($request->all());
-        return redirect()->route('admin.sub-category.index')->with('success', 'Sub Category created successfully.');
+        SubCategory::create($request->all());
+        return redirect()->route('admin.sub_category.index')->with('success', 'Sub Category created successfully.');
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param Category $categorie
+     * @param Category $subCategory
      * @return void
      * @author Bhavesh Vyas
      */
-    public function edit(Category $categorie)
+    public function edit(SubCategory $subCategory)
     {
         $themes = Theme::all();
-        return view('admin.sub-category.edit', compact('categorie', 'themes'));
+        return view('admin.sub-category.edit', compact('subCategory', 'themes'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param Category $categorie
+     * @param Category $subCategory
      * @return void
      * @author Bhavesh Vyas
      */
-    public function update(Request $request, Category $categorie)
+    public function update(Request $request, SubCategory $subCategory)
     {
+        dd($request->all());
         $request->validate([
-            'nom'          => 'required',
-            'theme_id'     => 'required',
-            'categorie_id' => 'required',
+            'name'        => 'required',
+            'theme_id'    => 'required',
+            'category_id' => 'required',
         ]);
 
-        $categorie->update($request->all());
-        return redirect()->route('admin.sub-category.index')->with('success', 'Sub Category updated successfully.');
+        $subCategory->update($request->all());
+        return redirect()->route('admin.sub_category.index')->with('success', 'Sub Category updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param Category $categorie
+     * @param Category $subCategory
      * @return void
      * @throws \Exception
      * @author Bhavesh Vyas
      */
-    public function destroy(Category $categorie)
+    public function destroy(Category $subCategory)
     {
-        $categorie->delete();
-        return redirect()->route('admin.sub-category.index')->with('success', 'Sub Category deleted successfully.');
+        $subCategory->delete();
+        return redirect()->route('admin.sub_category.index')->with('success', 'Sub Category deleted successfully.');
     }
 
     /**

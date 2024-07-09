@@ -57,8 +57,8 @@
             </div>
         </div>
     </div>
-</x-adminapp>
 
-@push('scripts')
-    <script src="{{ asset('js/subcategory.js?v=' . time()) }}"></script>
-@endpush
+    @push('scripts')
+        <script src="{{ asset('js/sub_category.js?v=' . time()) }}"></script>
+    @endpush
+</x-adminapp>
