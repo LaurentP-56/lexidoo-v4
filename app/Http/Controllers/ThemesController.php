@@ -15,11 +15,8 @@ class ThemesController extends Controller
 
     public function create()
     {
-        // Récupérer tous les thèmes ou seulement les thèmes parents si nécessaire
-        $themes = Theme::whereNull('parent_id')->get(); // Exemple pour récupérer seulement les thèmes parents
-        return view('admin.theme.create', compact('themes'));
+        return view('admin.theme.create');
     }
-
 
     public function store(Request $request)
     {
@@ -35,16 +32,13 @@ class ThemesController extends Controller
     public function edit($id)
     {
         $theme = Theme::findOrFail($id); // Récupère le thème à éditer
-        $themes = Theme::where('id', '!=', $id)->get(); // Récupère tous les autres thèmes pour la sélection du parent, en excluant le thème actuel
-
-        return view('admin.theme.edit', compact('theme', 'themes')); // Passe les thèmes à la vue
+        return view('admin.theme.edit', compact('theme'));
     }
 
     public function update(Request $request, Theme $theme)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:100',
-            'parent_id' => 'nullable|exists:themes,id'
         ]);
 
         $theme->update($validated);

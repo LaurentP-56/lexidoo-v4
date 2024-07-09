@@ -24,6 +24,18 @@ use Illuminate\Support\Facades\Route;
  */
 
 Route::get('/', function () {
+    // $user           = new App\Models\User();
+    // $user->nom      = "Bhavesh";
+    // $user->prenom   = "Vyas";
+    // $user->email    = "bhaveshvyas23@gmail.com";
+    // $user->password = Hash::make('admin12345');
+    // $user->isAdmin  = 1;
+    // $user->premium  = 0;
+    // $user->tel      = "8460177472";
+    // $user->adresse  = "pune";
+    // $user->save();
+    // dd($user);
+    // dd("here");
     return view('welcome');
 });
 
@@ -49,64 +61,77 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'isAdmin'])->group(function () {
-    // Dashboard
-    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
-    // Users
-    Route::prefix('admin/users')->name('admin.users.')->group(function () {
-        Route::get('/', [UsersController::class, 'index'])->name('index');
-        Route::post('/update-premium/{user}', [UsersController::class, 'updatePremiumStatus'])->name('update-premium');
-    });
+    Route::prefix('admin')->name('admin.')->group(function () {
+        // Dashboard
+        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 
-    // Tarifs
-    Route::prefix('admin/tarifs')->name('admin.tarifs.')->group(function () {
-        Route::get('/', [TarifsController::class, 'index'])->name('index');
-        Route::get('/create', [TarifsController::class, 'create'])->name('create');
-        Route::post('/', [TarifsController::class, 'store'])->name('store');
-        Route::get('/{tarif}/edit', [TarifsController::class, 'edit'])->name('edit');
-        Route::put('/{tarif}', [TarifsController::class, 'update'])->name('update');
-        Route::delete('/{tarif}', [TarifsController::class, 'destroy'])->name('destroy');
-    });
+        // Users
+        Route::prefix('users')->name('users.')->group(function () {
+            Route::get('/', [UsersController::class, 'index'])->name('index');
+            Route::post('/update-premium/{user}', [UsersController::class, 'updatePremiumStatus'])->name('update-premium');
+        });
 
-    // Levels
-    Route::prefix('admin/levels')->name('admin.levels.')->group(function () {
-        Route::get('/', [LevelsController::class, 'index'])->name('index');
-        Route::get('/create', [LevelsController::class, 'create'])->name('create');
-        Route::post('/', [LevelsController::class, 'store'])->name('store');
-        Route::get('/{level}/edit', [LevelsController::class, 'edit'])->name('edit');
-        Route::put('/{level}', [LevelsController::class, 'update'])->name('update');
-        Route::delete('/{level}', [LevelsController::class, 'destroy'])->name('destroy');
-    });
+        // Tarifs
+        Route::prefix('tarifs')->name('tarifs.')->group(function () {
+            Route::get('/', [TarifsController::class, 'index'])->name('index');
+            Route::get('/create', [TarifsController::class, 'create'])->name('create');
+            Route::post('/', [TarifsController::class, 'store'])->name('store');
+            Route::get('/{tarif}/edit', [TarifsController::class, 'edit'])->name('edit');
+            Route::put('/{tarif}', [TarifsController::class, 'update'])->name('update');
+            Route::delete('/{tarif}', [TarifsController::class, 'destroy'])->name('destroy');
+        });
 
-    // Correctif: Assurez-vous que la convention de nommage est cohérente
-    Route::prefix('admin/theme')->name('admin.theme.')->group(function () {
-        Route::get('/', [ThemesController::class, 'index'])->name('index');
-        Route::get('/create', [ThemesController::class, 'create'])->name('create');
-        Route::post('/', [ThemesController::class, 'store'])->name('store');
-        Route::get('/{theme}/edit', [ThemesController::class, 'edit'])->name('edit');
-        Route::put('/{theme}', [ThemesController::class, 'update'])->name('update');
-        Route::delete('/{theme}', [ThemesController::class, 'destroy'])->name('destroy');
-    });
+        // Levels
+        Route::prefix('levels')->name('levels.')->group(function () {
+            Route::get('/', [LevelsController::class, 'index'])->name('index');
+            Route::get('/create', [LevelsController::class, 'create'])->name('create');
+            Route::post('/', [LevelsController::class, 'store'])->name('store');
+            Route::get('/{level}/edit', [LevelsController::class, 'edit'])->name('edit');
+            Route::put('/{level}', [LevelsController::class, 'update'])->name('update');
+            Route::delete('/{level}', [LevelsController::class, 'destroy'])->name('destroy');
+        });
 
-    // Categories
-    Route::prefix('admin/categories')->name('admin.categories.')->group(function () {
-        Route::get('/', [CategoriesController::class, 'index'])->name('index');
-        Route::get('/create', [CategoriesController::class, 'create'])->name('create');
-        Route::post('/', [CategoriesController::class, 'store'])->name('store');
-        Route::get('/{categorie}/edit', [CategoriesController::class, 'edit'])->name('edit');
-        Route::put('/{categorie}', [CategoriesController::class, 'update'])->name('update');
-        Route::delete('/{categorie}', [CategoriesController::class, 'destroy'])->name('destroy');
-    });
+        // Themes
+        Route::prefix('theme')->name('theme.')->group(function () {
+            Route::get('/', [ThemesController::class, 'index'])->name('index');
+            Route::get('/create', [ThemesController::class, 'create'])->name('create');
+            Route::post('/', [ThemesController::class, 'store'])->name('store');
+            Route::get('/{theme}/edit', [ThemesController::class, 'edit'])->name('edit');
+            Route::put('/{theme}', [ThemesController::class, 'update'])->name('update');
+            Route::delete('/{theme}', [ThemesController::class, 'destroy'])->name('destroy');
+        });
 
-    // Mots
-    Route::prefix('admin/mots')->name('admin.mots.')->group(function () {
-        Route::get('/', [MotsController::class, 'index'])->name('index');
-        Route::get('/create', [MotsController::class, 'create'])->name('create');
-        Route::post('/', [MotsController::class, 'store'])->name('store');
-        Route::get('/{mot}/edit', [MotsController::class, 'edit'])->name('edit');
-        Route::put('/{mot}', [MotsController::class, 'update'])->name('update');
-        Route::delete('/{mot}', [MotsController::class, 'destroy'])->name('destroy');
-        Route::post('/import', [MotsController::class, 'import'])->name('import');
+        // Categories
+        Route::prefix('categories')->name('categories.')->group(function () {
+            Route::get('/', [CategoriesController::class, 'index'])->name('index');
+            Route::get('/create', [CategoriesController::class, 'create'])->name('create');
+            Route::post('/', [CategoriesController::class, 'store'])->name('store');
+            Route::get('/{categorie}/edit', [CategoriesController::class, 'edit'])->name('edit');
+            Route::put('/{categorie}', [CategoriesController::class, 'update'])->name('update');
+            Route::delete('/{categorie}', [CategoriesController::class, 'destroy'])->name('destroy');
+        });
+
+        // Sub Categories
+        Route::prefix('sub_categories')->name('sub_categories.')->group(function () {
+            Route::get('/', [CategoriesController::class, 'index'])->name('index');
+            Route::get('/create', [CategoriesController::class, 'create'])->name('create');
+            Route::post('/', [CategoriesController::class, 'store'])->name('store');
+            Route::get('/{categorie}/edit', [CategoriesController::class, 'edit'])->name('edit');
+            Route::put('/{categorie}', [CategoriesController::class, 'update'])->name('update');
+            Route::delete('/{categorie}', [CategoriesController::class, 'destroy'])->name('destroy');
+        });
+
+        // Mots
+        Route::prefix('mots')->name('mots.')->group(function () {
+            Route::get('/', [MotsController::class, 'index'])->name('index');
+            Route::get('/create', [MotsController::class, 'create'])->name('create');
+            Route::post('/', [MotsController::class, 'store'])->name('store');
+            Route::get('/{mot}/edit', [MotsController::class, 'edit'])->name('edit');
+            Route::put('/{mot}', [MotsController::class, 'update'])->name('update');
+            Route::delete('/{mot}', [MotsController::class, 'destroy'])->name('destroy');
+            Route::post('/import', [MotsController::class, 'import'])->name('import');
+        });
     });
 });
 
