@@ -22,8 +22,9 @@ class CategoriesController extends Controller
 
     public function store(Request $request)
     {
+        
         $validated = $request->validate([
-            'nom'      => 'required|string|max:255',
+            'name'      => 'required|string|max:255',
             'theme_id' => 'required|exists:themes,id',
         ]);
 
