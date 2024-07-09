@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Theme;
-use App\Models\CategorieTheme;
-use App\Models\Mot;
-use App\Models\Level;
-use Illuminate\Http\Request;
 use App\Imports\WordsImport;
+use App\Models\Category;
+use App\Models\Level;
+use App\Models\Mot;
+use App\Models\Theme;
+use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
 class MotsController extends Controller
@@ -20,9 +20,9 @@ class MotsController extends Controller
 
     public function create()
     {
-        $levels = Level::all(); // Récupère tous les niveaux
-        $themes = Theme::all(); // Récupère tous les thèmes
-        $categories = CategorieTheme::all(); // Récupère toutes les catégories (adaptez le nom du modèle si nécessaire)
+        $levels     = Level::all(); // Récupère tous les niveaux
+        $themes     = Theme::all(); // Récupère tous les thèmes
+        $categories = Category::all(); // Récupère toutes les catégories (adaptez le nom du modèle si nécessaire)
 
         // Passe les variables à la vue
         return view('admin.mots.create', compact('levels', 'themes', 'categories'));
@@ -31,11 +31,11 @@ class MotsController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nom' => 'required|string|max:255',
-            'traduction' => 'required|string|max:255',
-            'level_id' => 'required|exists:levels,id',
-            'gratuit' => 'required|boolean',
-            'probability_of_appearance' => 'required|numeric'
+            'nom'                       => 'required|string|max:255',
+            'traduction'                => 'required|string|max:255',
+            'level_id'                  => 'required|exists:levels,id',
+            'gratuit'                   => 'required|boolean',
+            'probability_of_appearance' => 'required|numeric',
         ]);
 
         Mot::create($validated);
@@ -52,11 +52,11 @@ class MotsController extends Controller
     public function update(Request $request, Mot $mot)
     {
         $validated = $request->validate([
-            'nom' => 'required|string|max:255',
-            'traduction' => 'required|string|max:255',
-            'level_id' => 'required|exists:levels,id',
-            'gratuit' => 'required|boolean',
-            'probability_of_appearance' => 'required|numeric'
+            'nom'                       => 'required|string|max:255',
+            'traduction'                => 'required|string|max:255',
+            'level_id'                  => 'required|exists:levels,id',
+            'gratuit'                   => 'required|boolean',
+            'probability_of_appearance' => 'required|numeric',
         ]);
 
         $mot->update($validated);

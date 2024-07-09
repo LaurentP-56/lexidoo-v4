@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
-use App\Models\CategorieTheme;
+use App\Models\Category;
 use App\Models\Level;
 use App\Models\Mot;
-use App\Models\SousCategorieTheme;
+use App\Models\SousCategory;
 use App\Models\Theme;
 use App\Models\User;
 use App\Models\UserWordProbability;
@@ -29,8 +29,8 @@ class JeuService
         $levels         = Level::all();
         $themes         = Theme::whereNull('parent_id')->get();
         $sousThemes     = Theme::whereNotNull('parent_id')->get();
-        $categories     = CategorieTheme::all();
-        $sousCategories = SousCategorieTheme::all();
+        $categories     = Category::all();
+        $sousCategories = SousCategory::all();
         $mots           = Mot::pluck('nom', 'id')->all();
         $motThemes      = [];
         $motThemeData   = DB::table('mot_theme')->get();

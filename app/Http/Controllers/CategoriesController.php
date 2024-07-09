@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CategorieTheme;
+use App\Models\Category;
 use App\Models\Theme;
 use Illuminate\Http\Request;
 
@@ -10,7 +10,7 @@ class CategoriesController extends Controller
 {
     public function index()
     {
-        $categories = CategorieTheme::with('theme')->paginate(20);
+        $categories = Category::with('theme')->paginate(20);
         return view('admin.categorie.index', compact('categories'));
     }
 
@@ -23,25 +23,25 @@ class CategoriesController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nom' => 'required|string|max:255',
+            'nom'      => 'required|string|max:255',
             'theme_id' => 'required|exists:themes,id',
         ]);
 
-        CategorieTheme::create($validated);
+        Category::create($validated);
 
         return redirect()->route('admin.categories.index')->with('success', 'Catégorie créée avec succès.');
     }
 
-    public function edit(CategorieTheme $categorie)
+    public function edit(Category $categorie)
     {
         $themes = Theme::all();
         return view('admin.categorie.edit', compact('categorie', 'themes'));
     }
 
-    public function update(Request $request, CategorieTheme $categorie)
+    public function update(Request $request, Category $categorie)
     {
         $validated = $request->validate([
-            'nom' => 'required|string|max:255',
+            'nom'      => 'required|string|max:255',
             'theme_id' => 'required|exists:themes,id',
         ]);
 
@@ -50,7 +50,7 @@ class CategoriesController extends Controller
         return redirect()->route('admin.categories.index')->with('success', 'Catégorie mise à jour avec succès.');
     }
 
-    public function destroy(CategorieTheme $categorie)
+    public function destroy(Category $categorie)
     {
         $categorie->delete();
         return redirect()->route('admin.categories.index')->with('success', 'Catégorie supprimée avec succès.');

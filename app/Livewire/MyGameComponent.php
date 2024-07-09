@@ -2,10 +2,10 @@
 
 namespace App\Livewire;
 
-use App\Models\CategorieTheme;
+use App\Models\Category;
 use App\Models\Level;
 use App\Models\Mot;
-use App\Models\SousCategorieTheme;
+use App\Models\SousCategory;
 use App\Models\Theme;
 use App\Models\User;
 use App\Models\UserWordProbability;
@@ -53,7 +53,7 @@ class MyGameComponent extends Component
         $this->isPremium    = (bool) auth()->user()->premium;
         $this->levels       = Level::all();
         $this->themes       = Theme::whereNull('parent_id')->pluck('name', 'id');
-        $this->categories   = CategorieTheme::pluck('nom', 'id');
+        $this->categories   = Category::pluck('nom', 'id');
         $this->tempsOptions = [
             ['id' => 1, 'duree' => '3 Minutes', 'description' => '3 minutes par jour, c’est mieux que rien !'],
             ['id' => 2, 'duree' => '5 Minutes', 'description' => 'Idéal pour une petite pause !'],
@@ -80,7 +80,7 @@ class MyGameComponent extends Component
             $this->subThemeId = $optionId;
         } elseif ($stepName == 'category') {
             $this->categoryId    = $optionId;
-            $this->subCategories = SousCategorieTheme::where('categorie_theme_id', $optionId)->pluck('nom', 'id');
+            $this->subCategories = SousCategory::where('categorie_theme_id', $optionId)->pluck('nom', 'id');
         } elseif ($stepName == 'temps') {
             $this->tempsOption = $optionId;
         }

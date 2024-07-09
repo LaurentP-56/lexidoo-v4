@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CategorieTheme;
+use App\Models\Category;
 use App\Models\Theme;
 use Illuminate\Http\Request;
 
@@ -16,7 +16,7 @@ class SubCategoryController extends Controller
      */
     public function index()
     {
-        $categories = CategorieTheme::all();
+        $categories = Category::all();
         $themes     = Theme::all();
         return view('sub-category.index', compact('categories', 'themes'));
     }
@@ -36,18 +36,18 @@ class SubCategoryController extends Controller
             'categorie_id' => 'required',
         ]);
 
-        CategorieTheme::create($request->all());
+        Category::create($request->all());
         return redirect()->route('sub-category.index')->with('success', 'Sub Category created successfully.');
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param CategorieTheme $categorie
+     * @param Category $categorie
      * @return void
      * @author Bhavesh Vyas
      */
-    public function edit(CategorieTheme $categorie)
+    public function edit(Category $categorie)
     {
         $themes = Theme::all();
         return view('sub-category.edit', compact('categorie', 'themes'));
@@ -57,11 +57,11 @@ class SubCategoryController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param CategorieTheme $categorie
+     * @param Category $categorie
      * @return void
      * @author Bhavesh Vyas
      */
-    public function update(Request $request, CategorieTheme $categorie)
+    public function update(Request $request, Category $categorie)
     {
         $request->validate([
             'nom'          => 'required',
@@ -76,12 +76,12 @@ class SubCategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param CategorieTheme $categorie
+     * @param Category $categorie
      * @return void
      * @throws \Exception
      * @author Bhavesh Vyas
      */
-    public function destroy(CategorieTheme $categorie)
+    public function destroy(Category $categorie)
     {
         $categorie->delete();
         return redirect()->route('sub-category.index')->with('success', 'Sub Category deleted successfully.');
@@ -102,11 +102,11 @@ class SubCategoryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param CategorieTheme $categorie
+     * @param Category $categorie
      * @return void
      * @author Bhavesh Vyas
      */
-    public function show(CategorieTheme $categorie)
+    public function show(Category $categorie)
     {
         return view('sub-category.show', compact('categorie'));
     }

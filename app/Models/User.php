@@ -51,7 +51,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'finDuPremium' => 'datetime', // Assurez-vous que finDuPremium est traité comme datetime
+        'finDuPremium'      => 'datetime', // Assurez-vous que finDuPremium est traité comme datetime
     ];
 
     /**
@@ -74,6 +74,6 @@ class User extends Authenticatable
     {
         // Supposons que vous utilisiez 'finDuPremium' pour déterminer si le statut premium est encore actif.
         // Cette méthode vérifie si 'finDuPremium' est dans le futur.
-        return $this->finDuPremium instanceof \Carbon\Carbon && $this->finDuPremium->isFuture();
+        return $this->finDuPremium instanceof \Carbon\Carbon  && $this->finDuPremium->isFuture();
     }
 }

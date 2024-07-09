@@ -6,6 +6,7 @@
             <div class="container mx-auto px-4 py-8">
                 <div class="w-full max-w-lg mx-auto">
                     <h2 class="text-xl font-semibold mb-6">Modifier le thème : {{ $theme->name }}</h2>
+
                     <form action="{{ route('admin.theme.update', $theme->id) }}" method="POST"
                         class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                         @csrf

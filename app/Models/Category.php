@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\Mot;
+use App\Models\Theme;
 use Illuminate\Database\Eloquent\Model;
 
-class CategorieTheme extends Model
+class Category extends Model
 {
     protected $table    = 'categories'; // Assurez-vous que le nom de la table correspond à votre base de données
     protected $fillable = ['nom', 'theme_id']; // Les attributs que vous pouvez assigner massivement
@@ -18,10 +20,15 @@ class CategorieTheme extends Model
     }
 
     /**
-     * Relation avec SousCategorieTheme.
+     * Relation avec SousCategory.
      */
     public function sousCategories()
     {
-        return $this->hasMany(SousCategorieTheme::class, 'categorie_theme_id');
+        return $this->hasMany(SousCategory::class, 'categorie_theme_id');
+    }
+
+    public function mots()
+    {
+        return $this->hasMany(Mot::class, 'category_id');
     }
 }

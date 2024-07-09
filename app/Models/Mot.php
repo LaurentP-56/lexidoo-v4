@@ -2,17 +2,23 @@
 
 namespace App\Models;
 
+use App\Models\Category;
+use App\Models\Level;
+use App\Models\SubCategory;
+use App\Models\Theme;
 use Illuminate\Database\Eloquent\Model;
 
 class Mot extends Model
 {
     protected $fillable = [
         'nom',
-        'traduction',
         'commentaire',
         'gratuit',
         'probability_of_appearance',
-        'level_id', // Assurez-vous d'inclure 'level_id' dans le tableau $fillable si vous souhaitez assigner massivement.
+        'level_id',
+        'theme_id',
+        'category_id',
+        'sub_category_id',
     ];
 
     // Définir la relation avec Level
@@ -27,6 +33,13 @@ class Mot extends Model
         return $this->belongsTo(Theme::class);
     }
 
-    // Méthodes supplémentaires au besoin
-}
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 
+    public function subCategory()
+    {
+        return $this->belongsTo(SubCategory::class);
+    }
+}
