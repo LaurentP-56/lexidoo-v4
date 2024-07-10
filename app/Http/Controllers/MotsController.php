@@ -20,12 +20,10 @@ class MotsController extends Controller
 
     public function create()
     {
-        $levels     = Level::all(); // Récupère tous les niveaux
-        $themes     = Theme::all(); // Récupère tous les thèmes
-        $categories = Category::all(); // Récupère toutes les catégories (adaptez le nom du modèle si nécessaire)
-
+        $levels     = Level::all(); // Récupère tous les niveaux   
+        $themes = Theme::all();
         // Passe les variables à la vue
-        return view('admin.mots.create', compact('levels', 'themes', 'categories'));
+        return view('admin.mots.create', compact('levels','themes'));
     }
 
     public function store(Request $request)
@@ -78,5 +76,35 @@ class MotsController extends Controller
         Excel::import(new WordsImport, $request->file('file'));
 
         return back()->with('success', 'Mots importés avec succès.');
+    }
+
+    /**
+     * Get category by theme id
+     *
+     * @param Request $request
+     * @return response
+     * @author Bhavesh Vyas
+     */
+    public function getCategory(Request $request)
+    {
+        return response([
+            'success'    => true,
+            'categories' => getCategory($request->theme_id),
+        ], 200);
+    }
+
+    /**
+     * Get category by theme id
+     *
+     * @param Request $request
+     * @return response
+     * @author Bhavesh Vyas
+     */
+    public function getSubCategory(Request $request)
+    {
+        return response([
+            'success'    => true,
+            'subcategories' => getSubCategory($request->category_id),
+        ], 200);
     }
 }

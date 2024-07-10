@@ -1,7 +1,12 @@
 $(document).ready(function () {
     $(document).on("change", ".themeId", function () {
         var themeId = $(this).val();
+        fetchCategoriesByTheme(themeId);
+    });
+
+    function fetchCategoriesByTheme(themeId) {
         $(".categoryData").find("option").not(":first").remove();
+        
         $.ajax({
             url: publicPath + "admin/sub_category/getCategory",
             type: "POST",
@@ -23,5 +28,7 @@ $(document).ready(function () {
                 });
             },
         });
-    });
+    }
 });
+
+

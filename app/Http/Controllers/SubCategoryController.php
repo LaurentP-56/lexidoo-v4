@@ -63,7 +63,7 @@ class SubCategoryController extends Controller
      */
     public function update(Request $request, SubCategory $subCategory)
     {
-        dd($request->all());
+//        dd($request->all());
         $request->validate([
             'name'        => 'required',
             'theme_id'    => 'required',
