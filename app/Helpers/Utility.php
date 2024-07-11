@@ -43,7 +43,7 @@ if (!function_exists('getSubCategory')) {
     function getSubCategory(int $categoryId = null)
     {
         if ($categoryId !== null) {
-            return SubCategory::where('categoryId', $categoryId)->pluck('name', 'id')->all();
+            return SubCategory::where('category_id', $categoryId)->pluck('name', 'id')->all();
         }
         return SubCategory::pluck('name', 'id')->all();
     }

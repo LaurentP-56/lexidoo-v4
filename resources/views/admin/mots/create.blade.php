@@ -44,10 +44,10 @@
                         </div>
 
                         <div class="mb-4">
-                            <label for="categorie_id"
+                            <label for="category_id"
                                 class="block text-gray-700 text-sm font-bold mb-2">Catégorie:</label>
-                            <select name="categorie_id" id="categorie_id"
-                                class="categoryData shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            <select name="category_id" id="category_id"
+                                class="categoryId shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                                 <option value="">Sélectionnez un Catégorie</option>
                             </select>
                         </div>
@@ -56,7 +56,7 @@
                             <label for="sub_category_id"
                                 class="block text-gray-700 text-sm font-bold mb-2">Sous-Catégorie:</label>
                             <select name="sub_category_id" id="sub_category_id"
-                                class="subCategoryData shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                class="subCategoryId shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                                 <option value="">Sélectionnez un Sous Catégorie</option>
                             </select>
                         </div>

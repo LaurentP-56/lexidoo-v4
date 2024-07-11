@@ -36,7 +36,7 @@
                                 Catégorie
                             </label>
                             <select name="category_id" id="category_id"
-                                class="categoryData shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                class="categoryId shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                                 <option value="">Sélectionnez un Catégorie</option>
                             </select>
                         </div>

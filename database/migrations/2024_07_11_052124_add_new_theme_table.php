@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('mots', function (Blueprint $table) {
-            $table->unsignedBigInteger('theme_id')->nullable()->after('level_id');
-            $table->foreign('theme_id')->references('id')->on('themes')->onDelete('cascade');
+        Schema::create('themes', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name');
+            $table->softDeletes();
+            $table->timestamps();
         });
-
     }
 
     /**
@@ -23,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('mots', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('themes');
     }
 };

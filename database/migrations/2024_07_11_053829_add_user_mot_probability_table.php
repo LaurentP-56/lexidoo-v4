@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('user_word_probabilities', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id')->unsigned()->nullable();
-            $table->bigInteger('mot_id')->unsigned()->nullable();
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('mot_id');
             $table->integer('probability_of_appearance')->default(50);
             $table->timestamps();
 
@@ -22,6 +22,7 @@ return new class extends Migration
                 ->references('id')
                 ->on('users')
                 ->onDelete('cascade');
+
             $table->foreign('mot_id')
                 ->references('id')
                 ->on('mots')

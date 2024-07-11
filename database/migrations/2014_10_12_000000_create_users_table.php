@@ -8,24 +8,42 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
+            $table->bigIncrements('id');
+            $table->string('nom')->nullable();
+            $table->string('prenom')->nullable();
             $table->string('email')->unique();
+            $table->string('tel')->nullable();
+            $table->string('adresse')->nullable();
+            $table->string('ville')->nullable();
+            $table->string('pays')->nullable();
+            $table->boolean('premium')->default(0);
+            $table->string('offre_premium')->default('');
+            $table->string('creationDuCompte')->nullable();
+            $table->dateTime('finDuPremium')->nullable();
+            $table->string('image')->nullable();
+            $table->string('provider')->nullable();
+            $table->string('provider_id')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->rememberToken();
+            $table->string('remember_token')->nullable();
+            $table->boolean('isAdmin')->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('users');
     }

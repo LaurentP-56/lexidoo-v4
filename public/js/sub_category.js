@@ -1,14 +1,9 @@
 $(document).ready(function () {
     $(document).on("change", ".themeId", function () {
         var themeId = $(this).val();
-        fetchCategoriesByTheme(themeId);
-    });
-
-    function fetchCategoriesByTheme(themeId) {
-        $(".categoryData").find("option").not(":first").remove();
-        
+        $(".categoryId").find("option").not(":first").remove();
         $.ajax({
-            url: publicPath + "admin/sub_category/getCategory",
+            url: publicPath + "admin/ajax/getCategory",
             type: "POST",
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
@@ -17,9 +12,8 @@ $(document).ready(function () {
                 themeId: themeId,
             },
             success: function (response) {
-                var html = "";
                 $.each(response.categories, function (key, value) {
-                    $(".categoryData").append(
+                    $(".categoryId").append(
                         $("<option/>", {
                             value: key,
                             text: value,
@@ -28,7 +22,30 @@ $(document).ready(function () {
                 });
             },
         });
-    }
+    });
+
+    $(document).on("change", ".categoryId", function () {
+        var categoryId = $(this).val();
+        $(".subCategoryId").find("option").not(":first").remove();
+        $.ajax({
+            url: publicPath + "admin/ajax/getSubCategory",
+            type: "POST",
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            data: {
+                categoryId: categoryId,
+            },
+            success: function (response) {
+                $.each(response.subcategories, function (key, value) {
+                    $(".subCategoryId").append(
+                        $("<option/>", {
+                            value: key,
+                            text: value,
+                        })
+                    );
+                });
+            },
+        });
+    });
 });
-
-

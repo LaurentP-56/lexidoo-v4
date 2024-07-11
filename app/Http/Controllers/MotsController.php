@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Imports\WordsImport;
-use App\Models\Category;
 use App\Models\Level;
 use App\Models\Mot;
 use App\Models\Theme;
@@ -20,23 +19,33 @@ class MotsController extends Controller
 
     public function create()
     {
-        $levels     = Level::all(); // Récupère tous les niveaux   
+        $levels = Level::all();
         $themes = Theme::all();
-        // Passe les variables à la vue
-        return view('admin.mots.create', compact('levels','themes'));
+        return view('admin.mots.create', compact('levels', 'themes'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nom'                       => 'required|string|max:255',
-            'traduction'                => 'required|string|max:255',
-            'level_id'                  => 'required|exists:levels,id',
-            'gratuit'                   => 'required|boolean',
-            'probability_of_appearance' => 'required|numeric',
+            'nom'             => 'required|string|max:255',
+            'traduction'      => 'required|string|max:255',
+            'level_id'        => 'required|exists:levels,id',
+            'gratuit'         => 'required',
+            'theme_id'        => 'required|exists:themes,id',
+            'category_id'     => 'required|exists:categories,id',
+            'sub_category_id' => 'required|exists:sub_categories,id',
+            //'probability_of_appearance' => 'required|numeric',
         ]);
 
-        Mot::create($validated);
+        $mot                  = new Mot();
+        $mot->nom             = $validated['nom'];
+        $mot->traduction      = $validated['traduction'];
+        $mot->level_id        = $validated['level_id'];
+        $mot->gratuit         = $validated['gratuit'] === 'on' ? 1 : 0;
+        $mot->theme_id        = $validated['theme_id'];
+        $mot->category_id     = $validated['category_id'];
+        $mot->sub_category_id = $validated['sub_category_id'];
+        $mot->save();
 
         return redirect()->route('admin.mots.index')->with('success', 'Mot créé avec succès.');
     }
@@ -44,17 +53,21 @@ class MotsController extends Controller
     public function edit(Mot $mot)
     {
         $levels = Level::all();
+        $themes = Theme::all();
         return view('admin.mots.edit', compact('mot', 'levels'));
     }
 
     public function update(Request $request, Mot $mot)
     {
         $validated = $request->validate([
-            'nom'                       => 'required|string|max:255',
-            'traduction'                => 'required|string|max:255',
-            'level_id'                  => 'required|exists:levels,id',
-            'gratuit'                   => 'required|boolean',
-            'probability_of_appearance' => 'required|numeric',
+            'nom'             => 'required|string|max:255',
+            'traduction'      => 'required|string|max:255',
+            'level_id'        => 'required|exists:levels,id',
+            'gratuit'         => 'required',
+            'theme_id'        => 'required|exists:themes,id',
+            'category_id'     => 'required|exists:categories,id',
+            'sub_category_id' => 'required|exists:sub_categories,id',
+            //'probability_of_appearance' => 'required|numeric',
         ]);
 
         $mot->update($validated);
@@ -67,6 +80,7 @@ class MotsController extends Controller
         $mot->delete();
         return redirect()->route('admin.mots.index')->with('success', 'Mot supprimé avec succès.');
     }
+
     public function import(Request $request)
     {
         $request->validate([
@@ -74,37 +88,6 @@ class MotsController extends Controller
         ]);
 
         Excel::import(new WordsImport, $request->file('file'));
-
         return back()->with('success', 'Mots importés avec succès.');
-    }
-
-    /**
-     * Get category by theme id
-     *
-     * @param Request $request
-     * @return response
-     * @author Bhavesh Vyas
-     */
-    public function getCategory(Request $request)
-    {
-        return response([
-            'success'    => true,
-            'categories' => getCategory($request->theme_id),
-        ], 200);
-    }
-
-    /**
-     * Get category by theme id
-     *
-     * @param Request $request
-     * @return response
-     * @author Bhavesh Vyas
-     */
-    public function getSubCategory(Request $request)
-    {
-        return response([
-            'success'    => true,
-            'subcategories' => getSubCategory($request->category_id),
-        ], 200);
     }
 }

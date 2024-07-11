@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\JeuController;
 use App\Http\Controllers\LevelsController;
@@ -144,6 +145,13 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
             Route::put('/{mot}', [MotsController::class, 'update'])->name('update');
             Route::delete('/{mot}', [MotsController::class, 'destroy'])->name('destroy');
             Route::post('/import', [MotsController::class, 'import'])->name('import');
+        });
+
+        // ajax
+        Route::prefix('ajax')->group(function () {
+            Route::post('getCategory', [AjaxController::class, 'getCategory']);
+            Route::post('getSubCategory', [AjaxController::class, 'getSubCategory']);
+
         });
     });
 });

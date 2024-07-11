@@ -99,19 +99,4 @@ class SubCategoryController extends Controller
         $themes = Theme::all();
         return view('admin.sub-category.create', compact('themes'));
     }
-
-    /**
-     * Get category by theme id
-     *
-     * @param Request $request
-     * @return response
-     * @author Bhavesh Vyas
-     */
-    public function getCategory(Request $request)
-    {
-        return response([
-            'success'    => true,
-            'categories' => getCategory($request->theme_id),
-        ], 200);
-    }
 }
