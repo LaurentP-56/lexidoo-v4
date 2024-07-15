@@ -57,28 +57,11 @@
                         </div>
                     @endif
 
-                    <!-- Sous-Thème -->
+                    <!-- Catégorie -->
                     @if ($step === 4)
                         <div class="gap-4">
                             <h3 class="text-center py-4 text-xl text-sky-900 font-semibold">
-                                Choisissez un sous-thème
-                            </h3>
-                            <div class="flex flex-wrap justify-center space-y-4">
-                                @foreach ($subThemes as $subThemeId => $subTheme)
-                                    <button type="button" wire:click="selectOption('subTheme', {{ $subThemeId }})"
-                                        class="btn-12 text-white w-full ">
-                                        <span>{{ $subTheme }}</span>
-                                        <span>{{ $subTheme }}</span>
-                                    </button>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endif
-
-                    <!-- Catégorie -->
-                    @if ($step === 5)
-                        <div class="gap-4">
-                            <h3 class="text-center py-4 text-xl text-sky-900 font-semibold">Choisissez une catégorie
+                                Choisissez une catégorie
                             </h3>
                             <div class="flex flex-wrap justify-center space-y-4">
                                 @foreach ($categories as $categoryId => $category)
@@ -93,7 +76,7 @@
                     @endif
 
                     <!-- Sous-Catégorie -->
-                    @if ($step === 6)
+                    @if ($step === 5)
                         <div class="gap-4">
                             <h3 class="text-center py-4 text-xl text-sky-900 font-semibold">
                                 Choisissez une sous-catégorie
@@ -111,7 +94,7 @@
                     @endif
 
                     <!-- Word -->
-                    @if ($step === 7 && $currentWord)
+                    @if ($step === 6 && $currentWord)
                         <div class="gap-4">
                             <h3 class="text-center py-4 text-xl text-sky-900 font-semibold">
                                 Choisissez un mot

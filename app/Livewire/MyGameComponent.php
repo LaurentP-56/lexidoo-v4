@@ -5,11 +5,10 @@ namespace App\Livewire;
 use App\Models\Category;
 use App\Models\Level;
 use App\Models\Mot;
-use App\Models\SousCategory;
+use App\Models\SubCategory;
 use App\Models\Theme;
 use App\Models\User;
 use App\Models\UserWordProbability;
-use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class MyGameComponent extends Component
@@ -17,7 +16,6 @@ class MyGameComponent extends Component
 
     public $levelId       = null;
     public $themeId       = null;
-    public $subThemeId    = null;
     public $categoryId    = null;
     public $subCategoryId = null;
     public $tempsOption   = null;
@@ -48,12 +46,20 @@ class MyGameComponent extends Component
      */
     public function mount()
     {
-        $this->step         = 1;
-        $this->userId       = auth()->user()->id;
-        $this->isPremium    = (bool) auth()->user()->premium;
-        $this->levels       = Level::all();
-        $this->themes       = Theme::whereNull('parent_id')->pluck('name', 'id');
-        $this->categories   = Category::pluck('nom', 'id');
+        $this->step      = 1;
+        $this->userId    = auth()->user()->id;
+        $this->isPremium = (bool) auth()->user()->premium;
+        $this->levels    = Level::all();
+        $this->themes    = getThemes();
+
+        if (auth()->user()->premium == 1) {
+            $this->themes = Theme::select('themes.name', 'themes.id')
+                ->join('mots', 'themes.id', '=', 'mots.theme_id')
+                ->distinct()
+                ->pluck('themes.name', 'themes.id')
+                ->all();
+        }
+
         $this->tempsOptions = [
             ['id' => 1, 'duree' => '3 Minutes', 'description' => '3 minutes par jour, c’est mieux que rien !'],
             ['id' => 2, 'duree' => '5 Minutes', 'description' => 'Idéal pour une petite pause !'],
@@ -74,13 +80,11 @@ class MyGameComponent extends Component
         if ($stepName == 'level') {
             $this->levelId = $optionId;
         } elseif ($stepName == 'theme') {
-            $this->themeId   = $optionId;
-            $this->subThemes = Theme::whereNotNull('parent_id')->where('parent_id', $optionId)->pluck('name', 'id');
-        } elseif ($stepName == 'subTheme') {
-            $this->subThemeId = $optionId;
+            $this->themeId    = $optionId;
+            $this->categories = Category::where('theme_id', $optionId)->pluck('name', 'id');
         } elseif ($stepName == 'category') {
             $this->categoryId    = $optionId;
-            $this->subCategories = SousCategory::where('categorie_theme_id', $optionId)->pluck('nom', 'id');
+            $this->subCategories = SubCategory::where('category_id', $optionId)->pluck('name', 'id');
         } elseif ($stepName == 'temps') {
             $this->tempsOption = $optionId;
         }
@@ -99,32 +103,25 @@ class MyGameComponent extends Component
 
         $this->allMots = $this->finalWords = [];
 
-        if ($this->levelId != '' && $this->themeId != '' && $this->subThemeId != '' && $this->categoryId != '' && $this->subCategoryId != '' && $this->tempsOption != '') {
+        if ($this->levelId != '' && $this->themeId != '' && $this->categoryId != '' && $this->subCategoryId != '' && $this->tempsOption != '') {
 
             $this->finalWord();
 
             $levelId       = $this->levelId;
             $themeId       = $this->themeId;
-            $subThemeId    = $this->subThemeId;
             $categoryId    = $this->categoryId;
             $subCategoryId = $this->subCategoryId;
             $tempsId       = $this->tempsOption;
 
-            // By level
-            $motByLevel = Mot::where('level', "like", "%{$levelId}%")->pluck('id')->all();
+            $motBySubCategories = Mot::where('sub_category_id', $subCategoryId)->pluck('id')->toArray();
+            if (count($motBySubCategories) == 0) {
+                $motBySubCategories = Mot::where('category_id', $categoryId)->pluck('id')->toArray();
+                if (count($motBySubCategories) == 0) {
+                    $motBySubCategories = Mot::where('theme_id', $themeId)->pluck('id')->toArray();
+                }
+            }
 
-            // By sous theme
-            $motBySousTheme = DB::table('mot_theme')->where('theme_id', $subThemeId)->pluck('mot_id')->all();
-
-            // By categories
-            $motByCategories = DB::table('categorie_theme_mot')->where('categorie_theme_id', $categoryId)->pluck('mot_id')->all();
-
-            // By sous categories
-            $motBySousCategories = DB::table('mot_sous_categorie_theme')->where('sous_categorie_theme_id', $subCategoryId)->pluck('mot_id')->all();
-
-            // merge and take only unique values
-            //$this->allMots = array_unique(array_merge($motByLevel, $motBySousTheme, $motByCategories, $motBySousCategories));
-            $this->allMots = array_unique($motBySousCategories + $motByCategories + $motBySousTheme + $motByLevel);
+            $this->allMots = $motBySubCategories;
             $this->getCurrentWord();
             $this->step++;
         }
