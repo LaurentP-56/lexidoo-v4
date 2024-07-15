@@ -121,9 +121,11 @@ class MyGameComponent extends Component
                 }
             }
 
-            $this->allMots = $motBySubCategories;
-            $this->getCurrentWord();
-            $this->step++;
+            if (count($motBySubCategories) > 0) {
+                $this->allMots = $motBySubCategories;
+                $this->getCurrentWord();
+                $this->step++;
+            }
         }
     }
 
