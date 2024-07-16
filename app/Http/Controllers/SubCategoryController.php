@@ -77,12 +77,12 @@ class SubCategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param Category $subCategory
+     * @param SubCategory $subCategory
      * @return void
      * @throws \Exception
      * @author Bhavesh Vyas
      */
-    public function destroy(Category $subCategory)
+    public function destroy(SubCategory $subCategory)
     {
         $subCategory->delete();
         return redirect()->route('admin.sub_category.index')->with('success', 'Sub Category deleted successfully.');

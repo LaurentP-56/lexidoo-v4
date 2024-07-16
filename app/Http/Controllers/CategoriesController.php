@@ -10,7 +10,7 @@ class CategoriesController extends Controller
 {
     public function index()
     {
-        $categories = Category::with('theme')->paginate(20);        
+        $categories = Category::with('theme')->paginate(20);
         return view('admin.categorie.index', compact('categories'));
     }
 
@@ -22,9 +22,9 @@ class CategoriesController extends Controller
 
     public function store(Request $request)
     {
-        
+
         $validated = $request->validate([
-            'name'      => 'required|string|max:255',
+            'name'     => 'required|string|max:255',
             'theme_id' => 'required|exists:themes,id',
         ]);
 
