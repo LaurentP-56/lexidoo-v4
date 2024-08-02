@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Category;
 use App\Models\Level;
 use App\Models\Mot;
+use App\Models\ProbabilityLevel;
 use App\Models\SubCategory;
 use App\Models\Theme;
 use App\Models\User;
@@ -38,6 +39,9 @@ class MyGameComponent extends Component
     public $showAnswer         = false;
     public $allMots            = null;
 
+    public $knowLevel     = null;
+    public $dontKnowLevel = null;
+
     /**
      * Mount the component.
      *
@@ -46,11 +50,14 @@ class MyGameComponent extends Component
      */
     public function mount()
     {
-        $this->step      = 1;
-        $this->userId    = auth()->user()->id;
-        $this->isPremium = (bool) auth()->user()->premium;
-        $this->levels    = Level::all();
-        $this->themes    = getThemes();
+        $this->step          = 1;
+        $this->userId        = auth()->user()->id;
+        $this->isPremium     = (bool) auth()->user()->premium;
+        $this->levels        = Level::all();
+        $this->themes        = getThemes();
+        $probability         = ProbabilityLevel::first();
+        $this->knowLevel     = $probability->know;
+        $this->dontKnowLevel = $probability->dont_know;
 
         if (auth()->user()->premium == 1) {
             $this->themes = Theme::select('themes.name', 'themes.id')
@@ -155,30 +162,26 @@ class MyGameComponent extends Component
             ->first();
 
         if (!$userWordProbability) {
-            // If the record does not exist, create a new one with default probability (e.g., 50%).
+            $currentProbability                             = 50;
             $userWordProbability                            = new UserWordProbability();
             $userWordProbability->user_id                   = $this->userId;
             $userWordProbability->mot_id                    = $this->currentWordId;
-            $userWordProbability->probability_of_appearance = 50; // Set initial probability
+            $userWordProbability->probability_of_appearance = $currentProbability;
+            $userWordProbability->know_level                = $this->knowLevel;
+            $userWordProbability->dont_know_level           = $this->dontKnowLevel;
+            if ($reaction == 'know') {
+                // Decreases the probability of the word appearing by $this->knowlevel %, down to a minimum of 1%.
+                // find the $this->knowlevel % of the current probability
+                $newProbability = $currentProbability - ($currentProbability * $this->knowLevel / 100);
+            } elseif ($reaction == 'dont_know') {
+                // Increases the probability of the word appearing to $this->dontKnowLevel %.
+                $newProbability = $currentProbability + ($currentProbability * $this->dontKnowLevel / 100);
+            }
+
+            $userWordProbability->probability_of_appearance = $newProbability;
+            $userWordProbability->updated_at                = now();
             $userWordProbability->save();
         }
-
-        $currentProbability = $userWordProbability->probability_of_appearance;
-
-        if ($reaction == 'knew') {
-            // Decreases the probability of the word appearing by 5%, down to a minimum of 1%.
-            $newProbability = max(1, $currentProbability - 5);
-        } elseif ($reaction == 'didntKnow') {
-            // Increases the probability of the word appearing to 90%.
-            $newProbability = 90;
-        } elseif ($reaction == 'dontWant') {
-            // Sets the probability of the word appearing to 0.
-            $newProbability = 0;
-        }
-
-        $userWordProbability->probability_of_appearance = $newProbability;
-        $userWordProbability->updated_at                = now();
-        $userWordProbability->save();
 
         $this->showAnswer = false;
         $this->getCurrentWord();

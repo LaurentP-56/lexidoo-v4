@@ -30,7 +30,7 @@ class MotsController extends Controller
             'nom'             => 'required|string|max:255',
             'traduction'      => 'required|string|max:255',
             'level_id'        => 'required|exists:levels,id',
-            'gratuit'         => 'required',
+            //'gratuit'         => 'required',
             'theme_id'        => 'required|exists:themes,id',
             'category_id'     => 'required|exists:categories,id',
             'sub_category_id' => 'required|exists:sub_categories,id',
@@ -41,7 +41,7 @@ class MotsController extends Controller
         $mot->nom             = $validated['nom'];
         $mot->traduction      = $validated['traduction'];
         $mot->level_id        = $validated['level_id'];
-        $mot->gratuit         = $validated['gratuit'] === 'on' ? 1 : 0;
+        $mot->gratuit         = isset($validated['gratuit']) ? 1 : 0;
         $mot->theme_id        = $validated['theme_id'];
         $mot->category_id     = $validated['category_id'];
         $mot->sub_category_id = $validated['sub_category_id'];

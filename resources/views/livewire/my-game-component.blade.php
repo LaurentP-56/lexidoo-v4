@@ -125,17 +125,12 @@
                                 </div>
                                 <div class="d-flex gap-2 justify-content-center py-5">
                                     <button class="btn btn-success rounded-pill px-3"
-                                        wire:click="updateProbability('knew')" type="button">
+                                        wire:click="updateProbability('know')" type="button">
                                         I KNEW IT
                                     </button>
                                     <button class="btn btn-success rounded-pill px-3"
-                                        wire:click="updateProbability('didntKnow')" type="button">
+                                        wire:click="updateProbability('dont_know')" type="button">
                                         I DIDN'T KNOW
-                                    </button>
-                                    <button class="btn btn-success rounded-pill px-3"
-                                        wire:click="updateProbability('dontWant')" type="button">
-                                        I DON'T WANT TO LEARN
-                                        THIS WORD
                                     </button>
                                 </div>
                             @endif

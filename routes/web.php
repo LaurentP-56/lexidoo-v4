@@ -6,6 +6,7 @@ use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\JeuController;
 use App\Http\Controllers\LevelsController;
 use App\Http\Controllers\MotsController;
+use App\Http\Controllers\ProbabilitiesController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\TarifsController;
@@ -92,6 +93,12 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
             Route::get('/{level}/edit', [LevelsController::class, 'edit'])->name('edit');
             Route::put('/{level}', [LevelsController::class, 'update'])->name('update');
             Route::delete('/{level}', [LevelsController::class, 'destroy'])->name('destroy');
+        });
+
+        // Probabilities
+        Route::prefix('probabilities')->name('probabilities.')->group(function () {
+            Route::get('/', [ProbabilitiesController::class, 'index'])->name('index');
+            Route::post('/', [ProbabilitiesController::class, 'store'])->name('store');
         });
 
         // Themes

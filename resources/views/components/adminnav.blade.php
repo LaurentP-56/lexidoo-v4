@@ -43,7 +43,9 @@
                         </x-slot>
 
                         <x-slot name="content">
-
+                            <x-dropdown-link :href="route('admin.probabilities.index')" :active="request()->routeIs('admin.probability.*')">
+                                {{ __('Niveau de probabilités') }}
+                            </x-dropdown-link>
                             <x-dropdown-link :href="route('admin.levels.index')" :active="request()->routeIs('admin.levels.*')">
                                 {{ __('Gestion des niveaux') }}
                             </x-dropdown-link>
