@@ -23,7 +23,7 @@ class CategoriesController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name'     => 'required|string|max:255',
+            'name'     => 'required|string|max:255|unique:categories,name,null,id,deleted_at,NULL',
             'theme_id' => 'required|exists:themes,id',
         ]);
 
@@ -41,7 +41,7 @@ class CategoriesController extends Controller
     public function update(Request $request, Category $categorie)
     {
         $validated = $request->validate([
-            'name'     => 'required|string|max:255',
+            'name'     => 'required|string|max:255|unique:categories,name,' . $categorie->id . ',id,deleted_at,NULL',
             'theme_id' => 'required|exists:themes,id',
         ]);
 

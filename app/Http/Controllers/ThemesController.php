@@ -21,7 +21,7 @@ class ThemesController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:themes,name,null,id,deleted_at,NULL',
         ]);
 
         Theme::create($validatedData);
@@ -38,7 +38,7 @@ class ThemesController extends Controller
     public function update(Request $request, Theme $theme)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:100',
+            'name' => 'required|string|max:100|unique:themes,name,' . $theme->id . ',id,deleted_at,NULL',
         ]);
 
         $theme->update($validated);
