@@ -19,7 +19,7 @@ class AjaxController extends Controller
     {
         return response([
             'success'    => true,
-            'categories' => getCategory($request->theme_id),
+            'categories' => getCategory($request->themeId),
         ], 200);
     }
 
@@ -34,7 +34,7 @@ class AjaxController extends Controller
     {
         return response([
             'success'       => true,
-            'subcategories' => getSubCategory($request->category_id),
+            'subcategories' => getSubCategory($request->categoryId),
         ], 200);
     }
 }

@@ -23,7 +23,7 @@
                                 Thème
                             </label>
                             <select name="theme_id" id="theme_id"
-                                class="themeId shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                class="themeId shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline themeId">
                                 <option value="">Sélectionnez un thème</option>
                                 @foreach (getThemes() as $themeId => $themeName)
                                     <option value="{{ $themeId }}">{{ $themeName }}</option>
@@ -36,7 +36,7 @@
                                 Catégorie
                             </label>
                             <select name="category_id" id="category_id"
-                                class="categoryId shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                class="categoryId shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline categoryId">
                                 <option value="">Sélectionnez un Catégorie</option>
                             </select>
                         </div>
