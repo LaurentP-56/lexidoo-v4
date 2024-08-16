@@ -5,9 +5,9 @@
 
             <div class="container mx-auto px-4 py-8">
                 <div class="w-full max-w-lg mx-auto">
-                    <h2 class="text-xl font-semibold mb-6">Modifier le thème : {{ $category->name }}</h2>
+                    <h2 class="text-xl font-semibold mb-6">Modifier le thème : {{ $categorie->name }}</h2>
 
-                    <form action="{{ route('admin.categories.update', $category->id) }}" method="POST"
+                    <form action="{{ route('admin.categories.update', $categorie->id) }}" method="POST"
                         class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                         @csrf
                         @method('PUT')
@@ -18,8 +18,11 @@
                             </label>
                             <input
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                id="name" type="text" name="name" value="{{ $category->name }}" required
-                                autofocus>
+                                id="name" type="text" name="name" value="{{ $categorie->name }}" required
+                                autofocus />
+                            @error('name')
+                                <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div class="mb-4">
@@ -29,10 +32,13 @@
                             <select name="theme_id" id="theme_id"
                                 class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                                 <option value="">Sélectionnez un thème parent</option>
-                                @foreach (getTheme() as $themeId => $themeName)
+                                @foreach (getThemes() as $themeId => $themeName)
                                     <option value="{{ $themeId }}">{{ $themeName }}</option>
                                 @endforeach
                             </select>
+                            @error('theme_id')
+                                <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div class="flex items-center justify-between">
