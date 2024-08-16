@@ -24,7 +24,9 @@
                                 <tr class="{{ $loop->iteration % 2 == 0 ? 'bg-teal-500' : 'bg-sky-500' }}">
                                     <td class="pt-2 pb-2 text-center text-xs">{{ $mot->nom }}</td>
                                     <td class="pt-2 pb-2 text-center text-xs">{{ $mot->traduction }}</td>
-                                    <td class="pt-2 pb-2 text-center text-xs">{{ $mot->level->label ?? 'N/A' }}</td>
+                                    <td class="pt-2 pb-2 text-center text-xs">
+                                        {{ $mot->levels }}
+                                    </td>
                                     <td class="pt-2 pb-2 text-center text-xs">{{ $mot->theme->name ?? 'N/A' }}</td>
                                     <td class="pt-2 pb-2 text-center text-xs">{{ $mot->category->name ?? 'N/A' }}</td>
                                     <td class="pt-2 pb-2 text-center text-xs">{{ $mot->subCategory->name ?? 'N/A' }}

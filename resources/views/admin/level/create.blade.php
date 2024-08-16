@@ -10,7 +10,7 @@
                             @csrf
                             <div>
                                 <label for="label">Label:</label>
-                                <input type="text" id="label" name="label" required>
+                                <input type="text" id="label" name="label" required class="form-control">
                             </div>
                             <div>
                                 <label for="sub_label">Sous-label:</label>

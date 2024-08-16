@@ -3,20 +3,21 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="p-6 bg-sky-800/20 border-b border-gray-200">
                 <h2 class="text-xl text-center text-black font-bold mb-2">Gestion des Niveaux</h2>
-                <a href="{{ route('admin.levels.create') }}" class="px-4 py-2 bg-blue-500 text-white rounded">Ajouter un
-                    nouveau niveau</a>
-                <table class="table-auto w-full mt-4">
+                <a href="{{ route('admin.levels.create') }}" class="px-4 py-2 bg-blue-500 text-white rounded">
+                    Ajouter un nouveau niveau
+                </a>
+                <table class="table table-striped mt-4">
                     <thead>
                         <tr>
-                            <th>Label</th>
-                            <th>Sous-label</th>
-                            <th>Classe</th>
-                            <th>Actions</th>
+                            <th scope="col">Label</th>
+                            <th scope="col">Sous-label</th>
+                            <th scope="col">Classe</th>
+                            <th scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($levels as $level)
-                            <tr class="{{ $loop->iteration % 2 == 0 ? 'bg-teal-500' : 'bg-sky-500' }}">
+                            <tr class="tr {{ $loop->iteration % 2 == 0 ? 'bg-teal-500' : 'bg-sky-500' }}">
 
                                 <td>{{ $level->label }}</td>
                                 <td>{{ $level->sub_label }}</td>

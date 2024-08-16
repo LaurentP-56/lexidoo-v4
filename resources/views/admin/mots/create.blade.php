@@ -12,6 +12,9 @@
                             <input type="text" name="nom" id="nom"
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 required>
+                            @error('nom')
+                                <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div class="mb-4">
@@ -20,45 +23,64 @@
                             <input type="text" name="traduction" id="traduction"
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 required>
+                            @error('traduction')
+                                <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div class="mb-4">
                             <label for="level_id" class="block text-gray-700 text-sm font-bold mb-2">Niveau:</label>
-                            <select name="level_id" id="level_id"
-                                class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                @foreach ($levels as $level)
-                                    <option value="{{ $level->id }}">{{ $level->label }}</option>
-                                @endforeach
-                            </select>
+                            @foreach ($levels as $level)
+                                <label for="level.{{ $level->id }}">
+                                    <input type="checkbox" name="levels[]" id="level.{{ $level->id }}"
+                                        class="form-checkbox h-5 w-5 text-blue-600" value="{{ $level->id }}">
+                                    {{ $level->label }}
+                                </label>
+                            @endforeach
+                            @error('levels')
+                                <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div class="mb-4">
                             <label for="theme_id" class="block text-gray-700 text-sm font-bold mb-2">Thème:</label>
                             <select name="theme_id" id="theme_id"
-                                class="themeId shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                class="themeId shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                required>
                                 <option value="">Sélectionnez un thème</option>
                                 @foreach (getThemes() as $themeId => $themeName)
                                     <option value="{{ $themeId }}">{{ $themeName }}</option>
                                 @endforeach
                             </select>
+                            @error('theme_id')
+                                <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div class="mb-4">
                             <label for="category_id"
                                 class="block text-gray-700 text-sm font-bold mb-2">Catégorie:</label>
                             <select name="category_id" id="category_id"
-                                class="categoryId shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                class="categoryId shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                required>
                                 <option value="">Sélectionnez un Catégorie</option>
                             </select>
+                            @error('category_id')
+                                <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div class="mb-4">
                             <label for="sub_category_id"
                                 class="block text-gray-700 text-sm font-bold mb-2">Sous-Catégorie:</label>
                             <select name="sub_category_id" id="sub_category_id"
-                                class="subCategoryId shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                class="subCategoryId shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                required>
                                 <option value="">Sélectionnez un Sous Catégorie</option>
                             </select>
+                            @error('sub_category_id')
+                                <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div class="mb-4">

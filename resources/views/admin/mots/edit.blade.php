@@ -25,14 +25,17 @@
 
                         <div class="mb-4">
                             <label for="level_id" class="block text-gray-700 text-sm font-bold mb-2">Niveau:</label>
-                            <select name="level_id" id="level_id"
-                                class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                @foreach ($levels as $level)
-                                    <option value="{{ $level->id }}"
-                                        @if ($mot->level_id == $level->id) selected @endif>
-                                        {{ $level->label }}</option>
-                                @endforeach
-                            </select>
+                            @foreach ($levelList as $level)
+                                <label for="level.{{ $level->id }}">
+                                    <input type="checkbox" name="levels[]" id="level.{{ $level->id }}"
+                                        class="form-checkbox h-5 w-5 text-blue-600" value="{{ $level->id }}"
+                                        @if (in_array($level->id, $levels)) checked @endif>
+                                    {{ $level->label }}
+                                </label>
+                            @endforeach
+                            @error('levels')
+                                <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div class="mb-4">

@@ -13,8 +13,9 @@ class MotsController extends Controller
 {
     public function index()
     {
-        $mots = Mot::with('level')->paginate(20);
-        return view('admin.mots.index', compact('mots'));
+        $mots   = Mot::with('level')->paginate(20);
+        $levels = Level::all();
+        return view('admin.mots.index', compact('mots', 'levels'));
     }
 
     public function create()
@@ -29,18 +30,18 @@ class MotsController extends Controller
         $validated = $request->validate([
             'nom'             => 'required|string|max:255',
             'traduction'      => 'required|string|max:255',
-            'level_id'        => 'required|exists:levels,id',
-            //'gratuit'         => 'required',
+            'levels'          => 'required',
             'theme_id'        => 'required|exists:themes,id',
             'category_id'     => 'required|exists:categories,id',
             'sub_category_id' => 'required|exists:sub_categories,id',
-            //'probability_of_appearance' => 'required|numeric',
         ]);
+
+        $levels = implode(',', $validated['levels']);
 
         $mot                  = new Mot();
         $mot->nom             = $validated['nom'];
         $mot->traduction      = $validated['traduction'];
-        $mot->level_id        = $validated['level_id'];
+        $mot->levels          = $levels;
         $mot->gratuit         = isset($validated['gratuit']) ? 1 : 0;
         $mot->theme_id        = $validated['theme_id'];
         $mot->category_id     = $validated['category_id'];
@@ -52,9 +53,10 @@ class MotsController extends Controller
 
     public function edit(Mot $mot)
     {
-        $levels = Level::all();
-        $themes = Theme::all();
-        return view('admin.mots.edit', compact('mot', 'levels'));
+        $levelList = Level::all();
+        $themes    = Theme::all();
+        $levels    = explode(',', $mot->levels);
+        return view('admin.mots.edit', compact('mot', 'levelList', 'themes', 'levels'));
     }
 
     public function update(Request $request, Mot $mot)
@@ -62,15 +64,23 @@ class MotsController extends Controller
         $validated = $request->validate([
             'nom'             => 'required|string|max:255',
             'traduction'      => 'required|string|max:255',
-            'level_id'        => 'required|exists:levels,id',
+            'levels'          => 'required',
             'gratuit'         => 'required',
             'theme_id'        => 'required|exists:themes,id',
             'category_id'     => 'required|exists:categories,id',
             'sub_category_id' => 'required|exists:sub_categories,id',
-            //'probability_of_appearance' => 'required|numeric',
         ]);
 
-        $mot->update($validated);
+        $levels = implode(',', $validated['levels']);
+
+        $mot->nom             = $validated['nom'];
+        $mot->traduction      = $validated['traduction'];
+        $mot->levels          = $levels;
+        $mot->gratuit         = isset($validated['gratuit']) ? 1 : 0;
+        $mot->theme_id        = $validated['theme_id'];
+        $mot->category_id     = $validated['category_id'];
+        $mot->sub_category_id = $validated['sub_category_id'];
+        $mot->save();
 
         return redirect()->route('admin.mots.index')->with('success', 'Mot mis à jour avec succès.');
     }
@@ -84,7 +94,7 @@ class MotsController extends Controller
     public function import(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|mimes:csv,txt',
+            'file' => 'required|file|mimes:csv,txt,xlsx,xls',
         ]);
 
         Excel::import(new WordsImport, $request->file('file'));
