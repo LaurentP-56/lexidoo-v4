@@ -90,10 +90,13 @@ class MyGameComponent extends Component
             $this->themeId    = $optionId;
             $this->categories = Category::where('theme_id', $optionId)->pluck('name', 'id');
         } elseif ($stepName == 'category') {
-            $this->categoryId    = $optionId;
-            $this->subCategories = SubCategory::where('category_id', $optionId)->pluck('name', 'id');
-        } elseif ($stepName == 'temps') {
-            $this->tempsOption = $optionId;
+            $this->categoryId = $optionId;
+            $subCategory      = SubCategory::where('category_id', $optionId);
+            if ($subCategory->count() > 0) {
+                $this->subCategories = $subCategory->pluck('name', 'id');
+            } else {
+                $this->fetchWords($optionId);
+            }
         }
         $this->step++;
     }
@@ -110,7 +113,7 @@ class MyGameComponent extends Component
 
         $this->allMots = $this->finalWords = [];
 
-        if ($this->levelId != '' && $this->themeId != '' && $this->categoryId != '' && $this->subCategoryId != '' && $this->tempsOption != '') {
+        if ($this->levelId != '' && $this->themeId != '' && $this->categoryId != '') {
 
             $this->finalWord();
 
