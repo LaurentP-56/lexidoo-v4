@@ -5,9 +5,6 @@ $(document).ready(function () {
         $.ajax({
             url: publicPath + "admin/ajax/getCategory",
             type: "POST",
-            data: {
-                theme_id: themeId,
-            },
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
             },
@@ -33,9 +30,6 @@ $(document).ready(function () {
         $.ajax({
             url: publicPath + "admin/ajax/getSubCategory",
             type: "POST",
-            data: {
-                category_id: categoryId,
-            },
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
             },
