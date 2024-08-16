@@ -39,34 +39,42 @@ class WordsImport implements ToModel
                 }
             }
 
-            $mot = Mot::where('nom', $row[0])->first();
-
-            if (!$mot) {
-                $mot = new Mot();
-            }
-
             if (!isset($this->themes[$row[9]])) {
-                $theme       = new Theme();
-                $theme->name = $row[9];
-                $theme->save();
-                $this->themes[$row[9]] = $theme->id;
+                $theme = Theme::where('name', $row[9])->first();
+                if (!$theme) {
+                    $theme       = new Theme();
+                    $theme->name = $row[9];
+                    $theme->save();
+                    $this->themes[$row[9]] = $theme->id;
+                }
             }
 
             if (!isset($this->categories[$row[10]])) {
-                $category           = new Category();
-                $category->theme_id = $this->themes[$row[9]];
-                $category->name     = $row[10];
-                $category->save();
-                $this->categories[$row[10]] = $category->id;
+                $category = Category::where('name', $row[10])->first();
+                if (!$category) {
+                    $category           = new Category();
+                    $category->theme_id = $this->themes[$row[9]];
+                    $category->name     = $row[10];
+                    $category->save();
+                    $this->categories[$row[10]] = $category->id;
+                }
             }
 
             if ($row[11] != '' && !isset($this->sub_categories[$row[11]])) {
-                $sub_category              = new SubCategory();
-                $sub_category->theme_id    = $this->themes[$row[9]];
-                $sub_category->category_id = $this->categories[$row[10]];
-                $sub_category->name        = $row[11];
-                $sub_category->save();
-                $this->sub_categories[$row[11]] = $sub_category->id;
+                $sub_category = SubCategory::where('name', $row[11])->first();
+                if (!$sub_category) {
+                    $sub_category              = new SubCategory();
+                    $sub_category->theme_id    = $this->themes[$row[9]];
+                    $sub_category->category_id = $this->categories[$row[10]];
+                    $sub_category->name        = $row[11];
+                    $sub_category->save();
+                    $this->sub_categories[$row[11]] = $sub_category->id;
+                }
+            }
+
+            $mot = Mot::where('nom', $row[0])->where('theme_id', $this->themes[$row[9]])->first();
+            if (!$mot) {
+                $mot = new Mot();
             }
 
             $mot->nom                       = $row[0];
