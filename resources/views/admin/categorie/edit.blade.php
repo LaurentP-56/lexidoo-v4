@@ -1,14 +1,12 @@
 <x-adminapp>
 
     <div class="py-12">
-        <div class=" max-w-7xl mx-auto sm:px-6 lg:px-8">
-
-            <div class="container mx-auto px-4 py-8">
-                <div class="w-full max-w-lg mx-auto">
-                    <h2 class="text-xl font-semibold mb-6">Modifier le thème : {{ $categorie->name }}</h2>
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="bg-sky-800/20 overflow-hidden shadow-xl p-2 sm:rounded-lg">
+                    <h2 class="text-xl text-black text-center font-semibold mb-6">Modifier le thème : {{ $categorie->name }}</h2>
 
                     <form action="{{ route('admin.categories.update', $categorie->id) }}" method="POST"
-                        class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                        class="bg-teal-300/30  shadow-md rounded px-8 pt-6 pb-8 mb-4">
                         @csrf
                         @method('PUT')
 
