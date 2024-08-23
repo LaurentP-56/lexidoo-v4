@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ProbabilityLevel;
+use App\Models\UserWordProbability;
 use Illuminate\Http\Request;
 
 class ProbabilitiesController extends Controller
@@ -30,5 +31,13 @@ class ProbabilitiesController extends Controller
         $probability->save();
 
         return redirect()->route('admin.probabilities.index')->with('success', 'Probabilities updated successfully');
+    }
+
+    public function reset(Request $request)
+    {
+        UserWordProbability::truncate();
+        UserWordProbability::query()->delete();
+        return redirect()->route('admin.probabilities.index')
+            ->with('success', 'User probabilities reset successfully');
     }
 }

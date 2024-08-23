@@ -5,6 +5,14 @@
             <div class="container mx-auto px-4 py-8">
                 <div class="w-full max-w-lg mx-auto">
                     <h2 class="text-xl font-semibold mb-6">Définir le niveau de probabilité</h2>
+
+                    @if (session('success'))
+                        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
+                            <p class="font-bold">Success</p>
+                            <p>{{ session('success') }}</p>
+                        </div>
+                    @endif
+
                     <form action="{{ route('admin.probabilities.store') }}" method="POST"
                         class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                         @csrf
@@ -41,8 +49,26 @@
                                 type="submit">
                                 Sauvegarder
                             </button>
+
+                            <a class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                id="resetUserProbability" href="javascript:void(0)">
+                                reset user probability
+                            </a>
                         </div>
                     </form>
+
+                    <form action="{{ route('admin.probabilities.reset') }}" method="POST" class="hidden"
+                        id="resetUserProbabilityForm">
+                        @csrf
+                    </form>
+
+                    <script>
+                        document.getElementById('resetUserProbability').addEventListener('click', function() {
+                            if (confirm('Are you sure you want reset user probability?')) {
+                                document.getElementById('resetUserProbabilityForm').submit();
+                            }
+                        });
+                    </script>
                 </div>
             </div>
         </div>

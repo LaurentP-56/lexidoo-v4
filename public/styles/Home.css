@@ -1,14 +1,14 @@
 body {
-    font-family: 'Nunito', sans-serif;
+    font-family: "Nunito", sans-serif;
     font-size: 1rem;
-    background: url('/images/index-home-bg5.webp') no-repeat center center fixed;
+    background: url("/images/index-home-bg5.webp") no-repeat center center fixed;
     min-height: 100vh;
     background-size: cover;
 }
 /* Mode sombre */
 @media (prefers-color-scheme: dark) {
     body {
-       /* background: url('/images/index-home-bg3.webp') no-repeat center center fixed;*/
+        /* background: url('/images/index-home-bg3.webp') no-repeat center center fixed;*/
     }
 }
 
@@ -17,22 +17,21 @@ body {
     --bs-gutter-y: 0;
     display: flex;
     flex-wrap: wrap;
-    margin-left: calc(var(--bs-gutter-x)*-.5);
-    margin-right: calc(var(--bs-gutter-x)*-.5);
-    margin-top: calc(var(--bs-gutter-y)*-1)
+    margin-left: calc(var(--bs-gutter-x) * -0.5);
+    margin-right: calc(var(--bs-gutter-x) * -0.5);
+    margin-top: calc(var(--bs-gutter-y) * -1);
 }
 
-.row>* {
+.row > * {
     flex-shrink: 0;
     margin-top: var(--bs-gutter-y);
     max-width: 100%;
-    padding-left: calc(var(--bs-gutter-x)*.5);
-    padding-right: calc(var(--bs-gutter-x)*.5);
-    width: 100%
+    padding-left: calc(var(--bs-gutter-x) * 0.5);
+    padding-right: calc(var(--bs-gutter-x) * 0.5);
+    width: 100%;
 }
 
-
-#second-row{
+#second-row {
     padding-top: 96px;
 }
 
@@ -42,7 +41,7 @@ body {
     width: 100px;
     border-radius: 50px;
     background: #d3952b;
-    color: #FFF;
+    color: #fff;
     font-size: 40px;
 }
 
@@ -50,9 +49,9 @@ body {
     margin-bottom: 16px;
 }
 
-.citation>div {
-    background: #FFF;
-    color: #0039CB;
+.citation > div {
+    background: #fff;
+    color: #0039cb;
     border-radius: 8px;
     padding: 16px 16px;
     font-size: 15px;
@@ -75,69 +74,66 @@ body {
     margin-bottom: 64px;
     padding: 8px 32px;
     font-size: 1rem;
-    border: 2px solid #FFF !important;
+    border: 2px solid #fff !important;
     display: inline-block;
 }
 
-#logo{
+#logo {
     padding: 1rem 1.5rem;
     display: inline-block;
     width: auto;
 }
 
-#login-btn{
+#login-btn {
     display: inline-block;
     float: right;
     padding: 2rem 1.5rem 0;
 }
 
-
 @media only screen and (max-width: 768px) {
-
-
-    #logo{
+    #logo {
         padding: 8px;
     }
 
-    #logo img{
+    #logo img {
         width: 40vw;
         height: auto !important;
     }
 
-    #login-btn{
+    #login-btn {
         padding: 16px;
         width: 50vw;
     }
 
-    #login-btn a{
+    #login-btn a {
         font-size: 1rem !important;
         padding: 8px !important;
         width: 100%;
         max-width: 150px !important;
     }
 
-    #cat-img, #girls-container{
+    #cat-img,
+    #girls-container {
         display: none;
     }
 
-    .citation{
+    .citation {
         max-width: 90vw;
     }
 
-    .citation div{
+    .citation div {
         max-width: 100%;
     }
 
-    #second-row{
+    #second-row {
         padding-top: 16px;
     }
 
-    #footer{
-
+    #footer {
         margin-bottom: 16px;
     }
 
-    .start-btn{
+    .start-btn {
         margin-bottom: 16px;
     }
 }

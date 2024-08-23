@@ -7,7 +7,6 @@ use App\Models\Level;
 use App\Models\Mot;
 use App\Models\ProbabilityLevel;
 use App\Models\SubCategory;
-use App\Models\Theme;
 use App\Models\User;
 use App\Models\UserWordProbability;
 use Livewire\Component;
@@ -59,13 +58,13 @@ class MyGameComponent extends Component
         $this->knowLevel     = $probability->know;
         $this->dontKnowLevel = $probability->dont_know;
 
-        if (auth()->user()->premium == 1) {
-            $this->themes = Theme::select('themes.name', 'themes.id')
-                ->join('mots', 'themes.id', '=', 'mots.theme_id')
-                ->distinct()
-                ->pluck('themes.name', 'themes.id')
-                ->all();
-        }
+        // if (auth()->user()->premium == 1) {
+        //     $this->themes = Theme::select('themes.name', 'themes.id')
+        //         ->join('mots', 'themes.id', '=', 'mots.theme_id')
+        //         ->distinct()
+        //         ->pluck('themes.name', 'themes.id')
+        //         ->all();
+        // }
 
         $this->tempsOptions = [
             ['id' => 1, 'duree' => '3 Minutes', 'description' => '3 minutes par jour, c’est mieux que rien !'],
@@ -90,8 +89,9 @@ class MyGameComponent extends Component
             $this->themeId    = $optionId;
             $this->categories = Category::where('theme_id', $optionId)->pluck('name', 'id');
         } elseif ($stepName == 'category') {
-            $this->categoryId = $optionId;
-            $subCategory      = SubCategory::where('category_id', $optionId);
+            $this->categoryId    = $optionId;
+            $this->subCategories = [];
+            $subCategory         = SubCategory::where('category_id', $optionId);
             if ($subCategory->count() > 0) {
                 $this->subCategories = $subCategory->pluck('name', 'id');
             } else {
@@ -123,13 +123,11 @@ class MyGameComponent extends Component
             $subCategoryId = $this->subCategoryId;
             $tempsId       = $this->tempsOption;
 
-            $motBySubCategories = Mot::where('sub_category_id', $subCategoryId)->pluck('id')->toArray();
-            if (count($motBySubCategories) == 0) {
-                $motBySubCategories = Mot::where('category_id', $categoryId)->pluck('id')->toArray();
-                if (count($motBySubCategories) == 0) {
-                    $motBySubCategories = Mot::where('theme_id', $themeId)->pluck('id')->toArray();
-                }
-            }
+            $motBySubCategories = Mot::where('theme_id', $themeId)
+                ->where('category_id', $categoryId)
+                ->where('sub_category_id', $subCategoryId)
+                ->pluck('id')
+                ->all();
 
             if (count($motBySubCategories) > 0) {
                 $this->allMots = $motBySubCategories;
@@ -148,6 +146,11 @@ class MyGameComponent extends Component
     public function showNewAnswer()
     {
         $this->showAnswer = true;
+    }
+
+    public function backToStep($step)
+    {
+        $this->step = $step;
     }
 
     /**
@@ -179,6 +182,8 @@ class MyGameComponent extends Component
             } elseif ($reaction == 'dont_know') {
                 // Increases the probability of the word appearing to $this->dontKnowLevel %.
                 $newProbability = $currentProbability + ($currentProbability * $this->dontKnowLevel / 100);
+            } else if ($reaction == 'dont_want_to_learn') {
+                $newProbability = 0;
             }
 
             $userWordProbability->probability_of_appearance = $newProbability;

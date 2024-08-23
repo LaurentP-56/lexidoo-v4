@@ -1,4 +1,9 @@
 <div>
+    <style>
+        .rightBtn a {
+            float: right;
+        }
+    </style>
     <x-slot name="header">
         <h2 class="text-xl font-semibold leading-tight text-gray-800">
             {{ __('Initialisation du jeu') }}
@@ -26,6 +31,12 @@
                     @endif
 
                     @if ($step === 2)
+                        <div class="rightBtn">
+                            <a href="javascript:void(0)" wire:click="backToStep(1)" class="btn btn-primary btn-lg">
+                                Retour
+                            </a>
+                        </div>
+
                         <div class="gap-4">
                             <h3 class="text-center py-4 text-xl text-sky-900 font-semibold">Choisissez le temps
                                 d'apprentissage</h3>
@@ -43,52 +54,74 @@
 
                     <!-- Thème -->
                     @if ($step === 3)
+                        <div class="rightBtn">
+                            <a href="javascript:void(0)" wire:click="backToStep(2)" class="btn btn-primary btn-lg">
+                                Retour
+                            </a>
+                        </div>
                         <div class="gap-4">
                             <h3 class="text-center py-4 text-xl text-sky-900 font-semibold">Choisissez un thème</h3>
                             <div class="flex flex-wrap justify-center space-y-4">
-                                @foreach ($themes as $themeId => $theme)
-                                    <button type="button" wire:click="selectOption('theme', {{ $themeId }})"
-                                        class="btn-12 text-white w-full ">
-                                        <span>{{ $theme }}</span>
-                                        <span>{{ $theme }}</span>
-                                    </button>
-                                @endforeach
+                                @if (count($themes) > 0)
+                                    @foreach ($themes as $themeId => $theme)
+                                        <button type="button" wire:click="selectOption('theme', {{ $themeId }})"
+                                            class="btn-12 text-white w-full ">
+                                            <span>{{ $theme }}</span>
+                                            <span>{{ $theme }}</span>
+                                        </button>
+                                    @endforeach
+                                @endif
                             </div>
                         </div>
                     @endif
 
                     <!-- Catégorie -->
                     @if ($step === 4)
+                        <div class="rightBtn">
+                            <a href="javascript:void(0)" wire:click="backToStep(3)" class="btn btn-primary btn-lg">
+                                Retour
+                            </a>
+                        </div>
                         <div class="gap-4">
                             <h3 class="text-center py-4 text-xl text-sky-900 font-semibold">
                                 Choisissez une catégorie
                             </h3>
                             <div class="flex flex-wrap justify-center space-y-4">
-                                @foreach ($categories as $categoryId => $category)
-                                    <button type="button" wire:click="selectOption('category', {{ $categoryId }})"
-                                        class="btn-12 text-white w-full ">
-                                        <span>{{ $category }}</span>
-                                        <span>{{ $category }}</span>
-                                    </button>
-                                @endforeach
+                                @if (count($categories) > 0)
+                                    @foreach ($categories as $categoryId => $category)
+                                        <button type="button"
+                                            wire:click="selectOption('category', {{ $categoryId }})"
+                                            class="btn-12 text-white w-full ">
+                                            <span>{{ $category }}</span>
+                                            <span>{{ $category }}</span>
+                                        </button>
+                                    @endforeach
+                                @endif
                             </div>
                         </div>
                     @endif
 
                     <!-- Sous-Catégorie -->
                     @if ($step === 5)
+                        <div class="rightBtn">
+                            <a href="javascript:void(0)" wire:click="backToStep(4)" class="btn btn-primary btn-lg">
+                                Retour
+                            </a>
+                        </div>
                         <div class="gap-4">
                             <h3 class="text-center py-4 text-xl text-sky-900 font-semibold">
                                 Choisissez une sous-catégorie
                             </h3>
                             <div class="flex flex-wrap justify-center space-y-4">
-                                @foreach ($subCategories as $subCategoryId => $subCategory)
-                                    <button type="button" wire:click="fetchWords({{ $subCategoryId }})"
-                                        class="btn-12 text-white w-full ">
-                                        <span>{{ $subCategory }}</span>
-                                        <span>{{ $subCategory }}</span>
-                                    </button>
-                                @endforeach
+                                @if (count($subCategories) > 0)
+                                    @foreach ($subCategories as $subCategoryId => $subCategory)
+                                        <button type="button" wire:click="fetchWords({{ $subCategoryId }})"
+                                            class="btn-12 text-white w-full ">
+                                            <span>{{ $subCategory }}</span>
+                                            <span>{{ $subCategory }}</span>
+                                        </button>
+                                    @endforeach
+                                @endif
                             </div>
                         </div>
                     @endif
@@ -124,14 +157,18 @@
                                     </div>
                                 </div>
                                 <div class="d-flex gap-2 justify-content-center py-5">
-                                    <button class="btn btn-success rounded-pill px-3"
-                                        wire:click="updateProbability('know')" type="button">
+                                    <a class="btn btn-lg btn-success rounded-pill px-3"
+                                        wire:click="updateProbability('know')" href="JavaScript:void(0)">
                                         I KNEW IT
-                                    </button>
-                                    <button class="btn btn-success rounded-pill px-3"
-                                        wire:click="updateProbability('dont_know')" type="button">
+                                    </a>
+                                    <a class="btn btn-lg btn-success rounded-pill px-3"
+                                        wire:click="updateProbability('dont_know')" href="JavaScript:void(0)">
                                         I DIDN'T KNOW
-                                    </button>
+                                    </a>
+                                    <a class="btn btn-lg btn-success rounded-pill px-3"
+                                        wire:click="updateProbability('dont_want_to_learn')" href="JavaScript:void(0)">
+                                        I don't want to learn
+                                    </a>
                                 </div>
                             @endif
                         </div>

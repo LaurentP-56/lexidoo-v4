@@ -99,6 +99,7 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
         Route::prefix('probabilities')->name('probabilities.')->group(function () {
             Route::get('/', [ProbabilitiesController::class, 'index'])->name('index');
             Route::post('/', [ProbabilitiesController::class, 'store'])->name('store');
+            Route::post('/reset', [ProbabilitiesController::class, 'reset'])->name('reset');
         });
 
         // Themes
