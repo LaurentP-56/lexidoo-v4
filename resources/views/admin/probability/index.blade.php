@@ -32,7 +32,7 @@
 
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
-                                Je ne sais pas
+                                Je ne le savais pas
                             </label>
                             <input
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -52,7 +52,7 @@
 
                             <a class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                 id="resetUserProbability" href="javascript:void(0)">
-                                reset user probability
+                                Réinitialiser la probabilité de l'utilisateur
                             </a>
                         </div>
                     </form>
@@ -64,7 +64,7 @@
 
                     <script>
                         document.getElementById('resetUserProbability').addEventListener('click', function() {
-                            if (confirm('Are you sure you want reset user probability?')) {
+                            if (confirm('Etes-vous sûr de vouloir réinitialiser la probabilité d'utilisation ?')) {
                                 document.getElementById('resetUserProbabilityForm').submit();
                             }
                         });
