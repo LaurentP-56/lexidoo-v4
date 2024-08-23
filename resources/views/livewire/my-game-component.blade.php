@@ -21,9 +21,9 @@
                             <div class="flex flex-wrap justify-center gap-4">
                                 @foreach ($levels as $level)
                                     <button type="button" wire:click="selectOption('level', {{ $level->id }})"
-                                        class="btn-12 text-white w-full ">
+                                        class="rounded bg-blue-500 active:bg-blue-600 hover:bg-blue-700 py-2 px-4 text-white focus:ring-2 focus:ring-offset-2 w-full  ">
                                         <span>{{ $level->label }} ({{ $level->sub_label }})</span>
-                                        <span>{{ $level->label }} ({{ $level->sub_label }})</span>
+                                        
                                     </button>
                                 @endforeach
                             </div>
@@ -43,9 +43,9 @@
                             <div class="flex flex-wrap justify-center space-y-4">
                                 @foreach ($tempsOptions as $temps)
                                     <button type="button" wire:click="selectOption('temps', {{ $temps['id'] }})"
-                                        class="btn-12 text-white w-full ">
+                                        class="rounded bg-blue-500 active:bg-blue-600 hover:bg-blue-700 py-2 px-4 text-white focus:ring-2 focus:ring-offset-2 w-full  ">
                                         <span>{{ $temps['duree'] }}</span>
-                                        <span>{{ $temps['duree'] }}</span>
+                                        
                                     </button>
                                 @endforeach
                             </div>
@@ -65,9 +65,9 @@
                                 @if (count($themes) > 0)
                                     @foreach ($themes as $themeId => $theme)
                                         <button type="button" wire:click="selectOption('theme', {{ $themeId }})"
-                                            class="btn-12 text-white w-full ">
+                                            class="rounded bg-blue-500 active:bg-blue-600 hover:bg-blue-700 py-2 px-4 text-white focus:ring-2 focus:ring-offset-2 w-full ">
                                             <span>{{ $theme }}</span>
-                                            <span>{{ $theme }}</span>
+                                            
                                         </button>
                                     @endforeach
                                 @endif
@@ -91,9 +91,9 @@
                                     @foreach ($categories as $categoryId => $category)
                                         <button type="button"
                                             wire:click="selectOption('category', {{ $categoryId }})"
-                                            class="btn-12 text-white w-full ">
+                                            class="rounded bg-blue-500 active:bg-blue-600 hover:bg-blue-700 py-2 px-4 text-white focus:ring-2 focus:ring-offset-2 w-full ">
                                             <span>{{ $category }}</span>
-                                            <span>{{ $category }}</span>
+                                            
                                         </button>
                                     @endforeach
                                 @endif
@@ -116,9 +116,9 @@
                                 @if (count($subCategories) > 0)
                                     @foreach ($subCategories as $subCategoryId => $subCategory)
                                         <button type="button" wire:click="fetchWords({{ $subCategoryId }})"
-                                            class="btn-12 text-white w-full ">
+                                            class="rounded bg-blue-500 active:bg-blue-600 hover:bg-blue-700 py-2 px-4 text-white focus:ring-2 focus:ring-offset-2 w-full ">
                                             <span>{{ $subCategory }}</span>
-                                            <span>{{ $subCategory }}</span>
+                                            
                                         </button>
                                     @endforeach
                                 @endif
@@ -130,7 +130,7 @@
                     @if ($step === 6 && $currentWord)
                         <div class="gap-4">
                             <h3 class="text-center py-4 text-xl text-sky-900 font-semibold">
-                                Choisissez un mot
+                                A vous de jouer
                             </h3>
 
                             <div class="row">
@@ -157,15 +157,15 @@
                                     </div>
                                 </div>
                                 <div class="d-flex gap-2 justify-content-center py-5">
-                                    <a class="btn btn-lg btn-success rounded-pill px-3"
+                                    <a class="bg-success text-white rounded-pill px-3"
                                         wire:click="updateProbability('know')" href="JavaScript:void(0)">
                                         Je le savais
                                     </a>
-                                    <a class="btn btn-lg btn-success rounded-pill px-3"
+                                    <a class=" bg-danger text-white rounded-pill px-3"
                                         wire:click="updateProbability('dont_know')" href="JavaScript:void(0)">
                                         Je ne le savais pas 
                                     </a>
-                                    <a class="btn btn-lg btn-success rounded-pill px-3"
+                                    <a class="class="bg-info rounded-pill text-white px-3""
                                         wire:click="updateProbability('dont_want_to_learn')" href="JavaScript:void(0)">
                                         Je ne veux pas apprendre ce mot
                                     </a>
