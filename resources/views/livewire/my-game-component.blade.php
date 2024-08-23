@@ -138,11 +138,11 @@
                                     <div class="bg-body-tertiary p-5 rounded">
                                         <p class="lead"> {{ $currentWord }}</p>
                                         <small>
-                                            Think for a few seconds Then click to see the answer
+                                            Réfléchissez quelques secondes Puis cliquez pour voir la réponse
                                         </small>
                                         <a class="btn btn-lg btn-primary" wire:click="showNewAnswer()" href="#"
                                             role="button">
-                                            ANSWER »
+                                           Réponse »
                                         </a>
                                     </div>
                                 </div>
@@ -159,15 +159,15 @@
                                 <div class="d-flex gap-2 justify-content-center py-5">
                                     <a class="btn btn-lg btn-success rounded-pill px-3"
                                         wire:click="updateProbability('know')" href="JavaScript:void(0)">
-                                        I KNEW IT
+                                        Je le savais
                                     </a>
                                     <a class="btn btn-lg btn-success rounded-pill px-3"
                                         wire:click="updateProbability('dont_know')" href="JavaScript:void(0)">
-                                        I DIDN'T KNOW
+                                        Je ne le savais pas 
                                     </a>
                                     <a class="btn btn-lg btn-success rounded-pill px-3"
                                         wire:click="updateProbability('dont_want_to_learn')" href="JavaScript:void(0)">
-                                        I don't want to learn
+                                        Je ne veux pas apprendre ce mot
                                     </a>
                                 </div>
                             @endif
