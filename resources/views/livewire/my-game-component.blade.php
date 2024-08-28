@@ -14,7 +14,6 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="p-6 bg-sky-800/20 border-b border-gray-200 place-items-end">
                 <div>
-
                     @if ($step === 1)
                         <div class="gap-4">
                             <h3 class="text-center py-4 text-xl text-sky-900 font-semibold">Choisissez votre niveau</h3>
@@ -127,7 +126,7 @@
                     @endif
 
                     <!-- Word -->
-                    @if ($step === 6 && $currentWord)
+                    @if ($step == 6 && $currentWord)
                         <div class="gap-4">
                             <h3 class="text-center py-4 text-xl text-sky-900 font-semibold">
                                 A vous de jouer

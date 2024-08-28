@@ -97,13 +97,16 @@ class MyGameComponent extends Component
             if ($subCategory->count() > 0) {
                 $this->subCategories = $subCategory->pluck('name', 'id');
             } else {
+                $this->step = "6";
                 $this->fetchWords();
             }
         } else if ($stepName == 'subCategory') {
             $this->subCategoryId = $optionId;
             $this->fetchWords();
         }
-        $this->step++;
+        if ($this->step != 6) {
+            $this->step++;
+        }
     }
 
     /**
@@ -132,8 +135,6 @@ class MyGameComponent extends Component
                 $motBySubCategories->where('sub_category_id', $subCategoryId);
             }
 
-            //$motBySubCategories = $motBySubCategories->pluck('id')->all();
-
             if ($motBySubCategories->count() > 0) {
                 $firstResult  = clone $motBySubCategories;
                 $secondResult = clone $motBySubCategories;
@@ -144,6 +145,7 @@ class MyGameComponent extends Component
                 foreach ($finalWords as $key => $value) {
                     $this->finalWords[$value['id']] = $value;
                 }
+
                 $this->getCurrentWord();
             }
         }
