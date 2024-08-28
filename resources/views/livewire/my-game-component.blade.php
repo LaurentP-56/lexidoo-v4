@@ -23,7 +23,7 @@
                                     <button type="button" wire:click="selectOption('level', {{ $level->id }})"
                                         class="rounded bg-blue-500 active:bg-blue-600 hover:bg-blue-700 py-2 px-4 text-white focus:ring-2 focus:ring-offset-2 w-full  ">
                                         <span>{{ $level->label }} ({{ $level->sub_label }})</span>
-                                        
+
                                     </button>
                                 @endforeach
                             </div>
@@ -45,7 +45,7 @@
                                     <button type="button" wire:click="selectOption('temps', {{ $temps['id'] }})"
                                         class="rounded bg-blue-500 active:bg-blue-600 hover:bg-blue-700 py-2 px-4 text-white focus:ring-2 focus:ring-offset-2 w-full  ">
                                         <span>{{ $temps['duree'] }}</span>
-                                        
+
                                     </button>
                                 @endforeach
                             </div>
@@ -67,7 +67,7 @@
                                         <button type="button" wire:click="selectOption('theme', {{ $themeId }})"
                                             class="rounded bg-blue-500 active:bg-blue-600 hover:bg-blue-700 py-2 px-4 text-white focus:ring-2 focus:ring-offset-2 w-full ">
                                             <span>{{ $theme }}</span>
-                                            
+
                                         </button>
                                     @endforeach
                                 @endif
@@ -93,7 +93,7 @@
                                             wire:click="selectOption('category', {{ $categoryId }})"
                                             class="rounded bg-blue-500 active:bg-blue-600 hover:bg-blue-700 py-2 px-4 text-white focus:ring-2 focus:ring-offset-2 w-full ">
                                             <span>{{ $category }}</span>
-                                            
+
                                         </button>
                                     @endforeach
                                 @endif
@@ -115,10 +115,10 @@
                             <div class="flex flex-wrap justify-center space-y-4">
                                 @if (count($subCategories) > 0)
                                     @foreach ($subCategories as $subCategoryId => $subCategory)
-                                        <button type="button" wire:click="fetchWords({{ $subCategoryId }})"
+                                        <button type="button"
+                                            wire:click="selectOption('subCategory', {{ $subCategoryId }})"
                                             class="rounded bg-blue-500 active:bg-blue-600 hover:bg-blue-700 py-2 px-4 text-white focus:ring-2 focus:ring-offset-2 w-full ">
                                             <span>{{ $subCategory }}</span>
-                                            
                                         </button>
                                     @endforeach
                                 @endif
@@ -142,7 +142,7 @@
                                         </small>
                                         <a class="btn btn-lg btn-primary" wire:click="showNewAnswer()" href="#"
                                             role="button">
-                                           Réponse »
+                                            Réponse »
                                         </a>
                                     </div>
                                 </div>
@@ -163,9 +163,9 @@
                                     </a>
                                     <a class=" bg-danger text-white rounded-pill px-3"
                                         wire:click="updateProbability('dont_know')" href="JavaScript:void(0)">
-                                        Je ne le savais pas 
+                                        Je ne le savais pas
                                     </a>
-                                    <a class="class="bg-info rounded-pill text-white px-3""
+                                    <a class="bg-info rounded-pill text-white px-3"
                                         wire:click="updateProbability('dont_want_to_learn')" href="JavaScript:void(0)">
                                         Je ne veux pas apprendre ce mot
                                     </a>

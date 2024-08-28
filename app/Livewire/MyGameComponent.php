@@ -85,6 +85,8 @@ class MyGameComponent extends Component
     {
         if ($stepName == 'level') {
             $this->levelId = $optionId;
+        } else if ($stepName == 'temps') {
+            $this->tempsOption = $optionId;
         } elseif ($stepName == 'theme') {
             $this->themeId    = $optionId;
             $this->categories = Category::where('theme_id', $optionId)->pluck('name', 'id');
@@ -95,8 +97,11 @@ class MyGameComponent extends Component
             if ($subCategory->count() > 0) {
                 $this->subCategories = $subCategory->pluck('name', 'id');
             } else {
-                $this->fetchWords($optionId);
+                $this->fetchWords();
             }
+        } else if ($stepName == 'subCategory') {
+            $this->subCategoryId = $optionId;
+            $this->fetchWords();
         }
         $this->step++;
     }
@@ -107,32 +112,39 @@ class MyGameComponent extends Component
      * @return void
      * @author Bhavesh Vyas
      */
-    public function fetchWords($subCategoryId)
+    public function fetchWords()
     {
-        $this->subCategoryId = $subCategoryId;
-
         $this->allMots = $this->finalWords = [];
 
         if ($this->levelId != '' && $this->themeId != '' && $this->categoryId != '') {
 
-            $this->finalWord();
-
             $levelId       = $this->levelId;
             $themeId       = $this->themeId;
             $categoryId    = $this->categoryId;
-            $subCategoryId = $this->subCategoryId;
+            $subCategoryId = ($this->subCategoryId == '') ? 0 : $this->subCategoryId;
             $tempsId       = $this->tempsOption;
 
-            $motBySubCategories = Mot::where('theme_id', $themeId)
+            $motBySubCategories = Mot::select("id", "nom", "traduction")
+                ->where('theme_id', $themeId)
                 ->where('category_id', $categoryId)
-                ->where('sub_category_id', $subCategoryId)
-                ->pluck('id')
-                ->all();
+                ->where('levels', 'like', '%' . $levelId . '%');
+            if ($subCategoryId != 0) {
+                $motBySubCategories->where('sub_category_id', $subCategoryId);
+            }
 
-            if (count($motBySubCategories) > 0) {
-                $this->allMots = $motBySubCategories;
+            //$motBySubCategories = $motBySubCategories->pluck('id')->all();
+
+            if ($motBySubCategories->count() > 0) {
+                $firstResult  = clone $motBySubCategories;
+                $secondResult = clone $motBySubCategories;
+
+                $this->allMots = $firstResult->pluck('id', 'id')->all();
+                $finalWords    = $secondResult->get()->toArray();
+
+                foreach ($finalWords as $key => $value) {
+                    $this->finalWords[$value['id']] = $value;
+                }
                 $this->getCurrentWord();
-                $this->step++;
             }
         }
     }
@@ -219,9 +231,12 @@ class MyGameComponent extends Component
      * @return void
      * @author Bhavesh Vyas
      */
-    public function finalWord()
+    public function finalWord($themeId)
     {
-        $finalWords = Mot::select("id", "nom", "traduction")->get()->toArray();
+        $finalWords = Mot::select("id", "nom", "traduction")
+            ->where('theme_id', $themeId)
+            ->get()
+            ->toArray();
         foreach ($finalWords as $key => $value) {
             $this->finalWords[$value['id']] = $value;
         }
