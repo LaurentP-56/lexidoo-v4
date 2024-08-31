@@ -7,6 +7,7 @@ use App\Models\Level;
 use App\Models\Mot;
 use App\Models\ProbabilityLevel;
 use App\Models\SubCategory;
+use App\Models\Theme;
 use App\Models\User;
 use App\Models\UserWordProbability;
 use Livewire\Component;
@@ -49,14 +50,20 @@ class MyGameComponent extends Component
      */
     public function mount()
     {
-        $this->step          = 1;
-        $this->userId        = auth()->user()->id;
-        $this->isPremium     = (bool) auth()->user()->premium;
-        $this->levels        = Level::all();
-        $this->themes        = getThemes();
+        $this->step      = 1;
+        $this->userId    = auth()->user()->id;
+        $this->isPremium = (bool) auth()->user()->premium;
+        $this->levels    = Level::all();
+        //$this->themes        = getThemes();
         $probability         = ProbabilityLevel::first();
         $this->knowLevel     = $probability->know;
         $this->dontKnowLevel = $probability->dont_know;
+
+        $this->themes = Theme::select('themes.name', 'themes.id')
+            ->join('mots', 'themes.id', '=', 'mots.theme_id')
+            ->distinct()
+            ->pluck('themes.name', 'themes.id')
+            ->all();
 
         // if (auth()->user()->premium == 1) {
         //     $this->themes = Theme::select('themes.name', 'themes.id')
