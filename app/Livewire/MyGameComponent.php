@@ -58,11 +58,7 @@ class MyGameComponent extends Component
         $this->knowLevel     = $probability->know;
         $this->dontKnowLevel = $probability->dont_know;
 
-        $this->themes = Theme::whereHas('categories.subCategories.mots', function ($query) {
-            $query->whereNotNull('nom');
-        })->with(['categories.subCategories.mots' => function ($query) {
-            $query->whereNotNull('nom');
-        }])->pluck('name', 'id')->all();
+        $this->themes = Theme::whereHas('mots')->pluck('name', 'id')->all();
 
         $this->tempsOptions = [
             ['id' => 1, 'duree' => '3 Minutes', 'description' => '3 minutes par jour, c’est mieux que rien !'],
