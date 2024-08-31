@@ -58,7 +58,9 @@ class MyGameComponent extends Component
         $this->knowLevel     = $probability->know;
         $this->dontKnowLevel = $probability->dont_know;
 
-        $this->themes = Theme::whereHas('mots')->pluck('name', 'id')->all();
+        $this->themes = Theme::whereHas('mots', function ($query) {
+            $query->where('levels', 'like', '%' . $this->levelId . '%');
+        })->pluck('name', 'id')->all();
 
         $this->tempsOptions = [
             ['id' => 1, 'duree' => '3 Minutes', 'description' => '3 minutes par jour, c’est mieux que rien !'],
@@ -86,13 +88,15 @@ class MyGameComponent extends Component
             $this->category = [];
             // get distinct categories from mots table based on theme_id
             $this->categories = Category::whereHas('mots', function ($query) {
-                $query->where('theme_id', $this->themeId);
+                $query->where('theme_id', $this->themeId)
+                    ->where('levels', 'like', '%' . $this->levelId . '%');
             })->pluck('name', 'id')->all();
         } elseif ($stepName == 'category') {
             $this->categoryId    = $optionId;
             $this->subCategories = SubCategory::wherehas('mots', function ($query) {
                 $query->where('theme_id', $this->themeId)
-                    ->where('category_id', $this->categoryId);
+                    ->where('category_id', $this->categoryId)
+                    ->where('levels', 'like', '%' . $this->levelId . '%');
             })->pluck('name', 'id')->all();
         } else if ($stepName == 'subCategory') {
             $this->subCategoryId = $optionId;
