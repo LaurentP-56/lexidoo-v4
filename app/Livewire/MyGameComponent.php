@@ -85,7 +85,7 @@ class MyGameComponent extends Component
             $this->themeId  = $optionId;
             $this->category = [];
             // get distinct categories from mots table based on theme_id
-            $this->categories = Category::whereHas('subCategories.mots', function ($query) {
+            $this->categories = Category::whereHas('mots', function ($query) {
                 $query->where('theme_id', $this->themeId);
             })->pluck('name', 'id')->all();
         } elseif ($stepName == 'category') {
