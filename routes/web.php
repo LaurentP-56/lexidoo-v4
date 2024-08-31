@@ -12,6 +12,10 @@ use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\TarifsController;
 use App\Http\Controllers\ThemesController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\GoogleTextToSpeechController;
+
+
 use App\Livewire\MyGameComponent;
 use Illuminate\Support\Facades\Route;
 
@@ -27,24 +31,25 @@ use Illuminate\Support\Facades\Route;
  */
 
 Route::get('/', function () {
-    // $user           = new App\Models\User();
-    // $user->nom      = "Bhavesh";
-    // $user->prenom   = "Vyas";
-    // $user->email    = "bhaveshvyas23@gmail.com";
-    // $user->password = Hash::make('admin12345');
-    // $user->isAdmin  = 1;
-    // $user->premium  = 0;
-    // $user->tel      = "8460177472";
-    // $user->adresse  = "pune";
-    // $user->save();
-    // dd($user);
-    // dd("here");
+   
     return view('welcome');
 });
-
+Route::get('/accueil', function () {
+   
+    return view('welcome');
+});
+Route::get('/cgu', function () {
+   
+    return view('cgu');
+});
+Route::get('/user/welcome', function () {
+    return redirect('/dashboard');
+});
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/generate-audios', [GoogleTextToSpeechController::class, 'generateMissingAudios'])->name('generate.audios');
+Route::get('/auth/callback/{provider}', 'App\Http\Controllers\SocialController@Callback');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
@@ -56,9 +61,9 @@ Route::middleware('auth')->group(function () {
 
     //Route::get('/dashboard/jeu', [JeuController::class, 'index'])->name('jeu.index');
     Route::post('/dashboard/jeu/submit', [JeuController::class, 'submit'])->name('jeu.submit');
-    // Dans web.php
-    Route::post('/dashboard/jeu/save-game-setup', [GameController::class, 'saveGameSetup'])->name('save.game.setup');
-    Route::get('/dashboard/jeu/play-game', [GameController::class, 'playGame'])->name('play.game');
+	
+  //  Route::post('/dashboard/jeu/save-game-setup', [GameController::class, 'saveGameSetup'])->name('save.game.setup');
+    //Route::get('/dashboard/jeu/play-game', [GameController::class, 'playGame'])->name('play.game');
 
     Route::post('get_words', [JeuController::class, 'getWords'])->name('jeu.mots');
 });
@@ -69,11 +74,15 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
         // Dashboard
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 
-        // Users
-        Route::prefix('users')->name('users.')->group(function () {
-            Route::get('/', [UsersController::class, 'index'])->name('index');
-            Route::post('/update-premium/{user}', [UsersController::class, 'updatePremiumStatus'])->name('update-premium');
-        });
+		// Users
+		Route::prefix('users')->name('users.')->group(function () {
+        Route::get('/', [UsersController::class, 'index'])->name('index');
+        Route::post('/update-premium/{user}', [UsersController::class, 'updatePremiumStatus'])->name('update-premium');
+		Route::post('/toggle-premium/{user}', [UsersController::class, 'togglePremium'])->name('users.togglePremium');
+		});
+
+
+
 
         // Tarifs
         Route::prefix('tarifs')->name('tarifs.')->group(function () {
@@ -95,12 +104,13 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
             Route::delete('/{level}', [LevelsController::class, 'destroy'])->name('destroy');
         });
 
-        // Probabilities
+  // Probabilities
         Route::prefix('probabilities')->name('probabilities.')->group(function () {
             Route::get('/', [ProbabilitiesController::class, 'index'])->name('index');
             Route::post('/', [ProbabilitiesController::class, 'store'])->name('store');
             Route::post('/reset', [ProbabilitiesController::class, 'reset'])->name('reset');
         });
+
 
         // Themes
         Route::prefix('theme')->name('theme.')->group(function () {
@@ -163,6 +173,9 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
         });
     });
 });
+
+Route::get('/gar', [ContactController::class, 'show'])->name('gar.show');
+Route::post('/gar', [ContactController::class, 'send'])->name('gar.send');
 
 Route::get('/tarifs', [ProfileController::class, 'showTarifs']);
 
