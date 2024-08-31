@@ -59,7 +59,9 @@ class MyGameComponent extends Component
         $this->dontKnowLevel = $probability->dont_know;
 
         $this->themes = Theme::whereHas('mots', function ($query) {
-            $query->where('levels', 'like', '%' . $this->levelId . '%');
+            $query->where('levels', 'like', '%' . $this->levelId . '%')
+                ->where('sub_category_id', '>', 0)
+                ->where('category_id', '>', 0);
         })->pluck('name', 'id')->all();
 
         $this->tempsOptions = [
@@ -89,7 +91,8 @@ class MyGameComponent extends Component
             // get distinct categories from mots table based on theme_id
             $this->categories = Category::whereHas('mots', function ($query) {
                 $query->where('theme_id', $this->themeId)
-                    ->where('levels', 'like', '%' . $this->levelId . '%');
+                    ->where('levels', 'like', '%' . $this->levelId . '%')
+                    ->where('sub_category_id', '>', 0);
             })->pluck('name', 'id')->all();
         } elseif ($stepName == 'category') {
             $this->categoryId    = $optionId;
