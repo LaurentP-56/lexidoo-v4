@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Mot;
+use App\Models\SubCategory;
 use App\Models\Theme;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,19 +17,28 @@ class Category extends Model
      */
     public function theme()
     {
-        return $this->belongsTo(Theme::class, 'theme_id');
+        return $this->belongsTo(Theme::class);
     }
 
     /**
-     * Relation avec SousCategory.
+     * Relation avec SubCategory.
+     *
+     * @return void
+     * @author Bhavesh Vyas
      */
-    public function sousCategories()
+    public function subCategories()
     {
-        return $this->hasMany(SousCategory::class, 'categorie_theme_id');
+        return $this->hasMany(SubCategory::class);
     }
 
+    /**
+     * Relation avec Mot.
+     *
+     * @return void
+     * @author Bhavesh Vyas
+     */
     public function mots()
     {
-        return $this->hasMany(Mot::class, 'category_id');
+        return $this->hasMany(Mot::class);
     }
 }

@@ -50,28 +50,19 @@ class MyGameComponent extends Component
      */
     public function mount()
     {
-        $this->step      = 1;
-        $this->userId    = auth()->user()->id;
-        $this->isPremium = (bool) auth()->user()->premium;
-        $this->levels    = Level::all();
-        //$this->themes        = getThemes();
+        $this->step          = 1;
+        $this->userId        = auth()->user()->id;
+        $this->isPremium     = (bool) auth()->user()->premium;
+        $this->levels        = Level::all();
         $probability         = ProbabilityLevel::first();
         $this->knowLevel     = $probability->know;
         $this->dontKnowLevel = $probability->dont_know;
 
-        $this->themes = Theme::select('themes.name', 'themes.id')
-            ->join('mots', 'themes.id', '=', 'mots.theme_id')
-            ->distinct()
-            ->pluck('themes.name', 'themes.id')
-            ->all();
-
-        // if (auth()->user()->premium == 1) {
-        //     $this->themes = Theme::select('themes.name', 'themes.id')
-        //         ->join('mots', 'themes.id', '=', 'mots.theme_id')
-        //         ->distinct()
-        //         ->pluck('themes.name', 'themes.id')
-        //         ->all();
-        // }
+        $this->themes = Theme::whereHas('categories.subCategories.mots', function ($query) {
+            $query->whereNotNull('nom');
+        })->with(['categories.subCategories.mots' => function ($query) {
+            $query->whereNotNull('nom');
+        }])->pluck('name', 'id')->all();
 
         $this->tempsOptions = [
             ['id' => 1, 'duree' => '3 Minutes', 'description' => '3 minutes par jour, c’est mieux que rien !'],
@@ -95,22 +86,23 @@ class MyGameComponent extends Component
         } else if ($stepName == 'temps') {
             $this->tempsOption = $optionId;
         } elseif ($stepName == 'theme') {
-            $this->themeId    = $optionId;
-            $this->categories = Category::where('theme_id', $optionId)->pluck('name', 'id');
+            $this->themeId  = $optionId;
+            $this->category = [];
+            // get distinct categories from mots table based on theme_id
+            $this->categories = Category::whereHas('subCategories.mots', function ($query) {
+                $query->where('theme_id', $this->themeId);
+            })->pluck('name', 'id')->all();
         } elseif ($stepName == 'category') {
             $this->categoryId    = $optionId;
-            $this->subCategories = [];
-            $subCategory         = SubCategory::where('category_id', $optionId);
-            if ($subCategory->count() > 0) {
-                $this->subCategories = $subCategory->pluck('name', 'id');
-            } else {
-                $this->step = "6";
-                $this->fetchWords();
-            }
+            $this->subCategories = SubCategory::wherehas('mots', function ($query) {
+                $query->where('theme_id', $this->themeId)
+                    ->where('category_id', $this->categoryId);
+            })->pluck('name', 'id')->all();
         } else if ($stepName == 'subCategory') {
             $this->subCategoryId = $optionId;
             $this->fetchWords();
         }
+
         if ($this->step != 6) {
             $this->step++;
         }
