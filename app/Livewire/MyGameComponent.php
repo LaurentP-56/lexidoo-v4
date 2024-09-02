@@ -1,25 +1,26 @@
 <?php
 
 namespace App\Livewire;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 use App\Models\Category;
 use App\Models\Level;
 use App\Models\Mot;
 use App\Models\ProbabilityLevel;
 use App\Models\SubCategory;
-use App\Models\Theme;
 use App\Models\User;
 use App\Models\UserWordProbability;
 use Livewire\Component;
 
 class MyGameComponent extends Component
 {
-
     public $levelId       = null;
     public $themeId       = null;
     public $categoryId    = null;
     public $subCategoryId = null;
     public $tempsOption   = null;
+    public $currentAudio  = null;
 
     public $levels        = null;
     public $themes        = null;
@@ -39,126 +40,234 @@ class MyGameComponent extends Component
     public $showAnswer         = false;
     public $allMots            = null;
 
-    public $knowLevel     = null;
-    public $dontKnowLevel = null;
+    public $knowLevel          = null;
+    public $dontKnowLevel      = null;
 
-    /**
-     * Mount the component.
-     *
-     * @return void
-     * @author Bhavesh Vyas
-     */
-    public function mount()
+    public $timeLeft;
+    public $totalWords         = 0;
+    public $knewWordClicks     = 0;
+    public $didntKnowWordClicks = 0;
+    public $dontWantToLearnClicks = 0;
+    public $isGameRunning      = false;
+
+	
+	 //(FR) Fonction Mount, sers à vérifier si le jeu à des themes/catégories/sous-categorie/mots
+	 //(EN) Mount function, used to check if the game has themes/categories/subcategories/words
+	 
+	 
+
+public function mount()
+{
+    $this->step = 1;
+    $this->userId = auth()->user()->id;
+    $this->isPremium = (bool) auth()->user()->premium;
+    $this->levels = Level::all();
+
+    // Convertir le résultat de getThemes en collection
+    $this->themes = collect(getThemes())->filter(function ($theme, $themeId) {
+        // Vérifier s'il y a des mots directement associés à ce thème (sans catégorie ni sous-catégorie)
+        $hasWordsDirect = Mot::where('theme_id', $themeId)
+            ->whereNull('category_id')
+            ->whereNull('sub_category_id')
+            ->where('levels', 'like', '%' . $this->levelId . '%')
+            ->exists();
+
+        // Vérifier s'il y a des mots via les catégories
+        $hasWordsInCategories = Category::where('theme_id', $themeId)
+            ->whereHas('mots', function ($query) {
+                $query->where('levels', 'like', '%' . $this->levelId . '%');
+            })
+            ->exists();
+
+        // Retourner true si le thème a des mots directement ou via des catégories
+        return $hasWordsDirect || $hasWordsInCategories;
+    });
+
+    $probability = ProbabilityLevel::first();
+    $this->knowLevel = $probability->know;
+    $this->dontKnowLevel = $probability->dont_know;
+
+    $this->tempsOptions = [
+        ['id' => 1, 'duree' => 3, 'description' => '3 minutes par jour, c’est mieux que rien !'],
+        ['id' => 2, 'duree' => 5, 'description' => 'Idéal pour une petite pause !'],
+        ['id' => 3, 'duree' => 10, 'description' => 'Parfait pour un bon entraînement !'],
+    ];
+}
+
+ // (FR) Fonction d'initialisation du jeu avec le timer
+ // (EN) Game initialization function with timer
+
+    public function initializeGame()
     {
-        $this->step          = 1;
-        $this->userId        = auth()->user()->id;
-        $this->isPremium     = (bool) auth()->user()->premium;
-        $this->levels        = Level::all();
-        $probability         = ProbabilityLevel::first();
-        $this->knowLevel     = $probability->know;
-        $this->dontKnowLevel = $probability->dont_know;
+        $duree = $this->tempsOptions[$this->tempsOption - 1]['duree'];
+        if (is_numeric($duree)) {
+            $this->timeLeft = $duree * 60; // Conversion en secondes
+        } else {
+            $this->timeLeft = 0; // Par sécurité, définissez une valeur par défaut
+        }
 
-        $this->themes = Theme::whereHas('mots', function ($query) {
-            $query->where('levels', 'like', '%' . $this->levelId . '%')
-                ->where('sub_category_id', '>', 0)
-                ->where('category_id', '>', 0);
-        })->pluck('name', 'id')->all();
-
-        $this->tempsOptions = [
-            ['id' => 1, 'duree' => '3 Minutes', 'description' => '3 minutes par jour, c’est mieux que rien !'],
-            ['id' => 2, 'duree' => '5 Minutes', 'description' => 'Idéal pour une petite pause !'],
-            ['id' => 3, 'duree' => '10 Minutes', 'description' => 'Parfait pour un bon entraînement !'],
-        ];
+        $this->isGameRunning = true;
     }
 
-    /**
-     * Select an option.
-     *
-     * @param string $stepName
-     * @param string $optionId
-     * @return void
-     * @author Bhavesh Vyas
-     */
-    public function selectOption(string $stepName, string $optionId)
+    public function getFormattedTime()
     {
-        if ($stepName == 'level') {
-            $this->levelId = $optionId;
-        } else if ($stepName == 'temps') {
-            $this->tempsOption = $optionId;
-        } elseif ($stepName == 'theme') {
-            $this->themeId  = $optionId;
-            $this->category = [];
-            // get distinct categories from mots table based on theme_id
-            $this->categories = Category::whereHas('mots', function ($query) {
-                $query->where('theme_id', $this->themeId)
-                    ->where('levels', 'like', '%' . $this->levelId . '%')
-                    ->where('sub_category_id', '>', 0);
-            })->pluck('name', 'id')->all();
-        } elseif ($stepName == 'category') {
-            $this->categoryId    = $optionId;
-            $this->subCategories = SubCategory::wherehas('mots', function ($query) {
-                $query->where('theme_id', $this->themeId)
-                    ->where('category_id', $this->categoryId)
-                    ->where('levels', 'like', '%' . $this->levelId . '%');
-            })->pluck('name', 'id')->all();
-        } else if ($stepName == 'subCategory') {
-            $this->subCategoryId = $optionId;
+        if (is_numeric($this->timeLeft)) {
+            $minutes = intdiv($this->timeLeft, 60);
+            $seconds = $this->timeLeft % 60;
+            return sprintf('%02d:%02d', $minutes, $seconds);
+        } else {
+            return '00:00'; // Valeur par défaut si quelque chose ne va pas
+        }
+    }
+
+    public function tick()
+    {
+        if ($this->timeLeft > 0) {
+            $this->timeLeft--;
+        } else {
+            $this->endGame();
+        }
+    }
+
+    public function endGame()
+    {
+        $this->isGameRunning = false;
+    }
+
+	
+	// (FR) Fonction de sélection d'option 
+	// (EN) Option selection function
+	
+public function selectOption(string $stepName, string $optionId)
+{
+    if ($stepName == 'level') {
+        $this->levelId = $optionId;
+    } elseif ($stepName == 'temps') {
+        $this->tempsOption = $optionId;
+    } elseif ($stepName == 'theme') {
+        $this->themeId = $optionId;
+
+        // Vérifier si le thème a des mots directement associés
+        $hasWordsDirect = Mot::where('theme_id', $optionId)
+            ->where('levels', 'like', '%' . $this->levelId . '%')
+            ->exists();
+
+        if (!$hasWordsDirect) {
+            $this->step = 6;
+            return;
+        }
+
+        $this->categories = Category::where('theme_id', $optionId)
+            ->whereHas('mots', function ($query) {
+                $query->where('levels', 'like', '%' . $this->levelId . '%');
+            })
+            ->pluck('name', 'id');
+
+        if ($this->categories->isEmpty()) {
+            $this->step = 6;
+            return;
+        }
+    } elseif ($stepName == 'category') {
+        $this->categoryId = $optionId;
+
+        $this->subCategories = SubCategory::where('category_id', $optionId)
+            ->whereHas('mots', function ($query) {
+                $query->where('levels', 'like', '%' . $this->levelId . '%');
+            })
+            ->pluck('name', 'id');
+
+        if ($this->subCategories->isEmpty()) {
             $this->fetchWords();
+            if (!empty($this->finalWords)) {
+                $this->step = 6;
+                $this->initializeGame();
+                return;
+            }
         }
-
-        if ($this->step != 6) {
-            $this->step++;
+    } elseif ($stepName == 'subCategory') {
+        $this->subCategoryId = $optionId;
+        $this->fetchWords();
+        if (!empty($this->finalWords)) {
+            $this->initializeGame();
+        } else {
+            $this->step = 6;
         }
     }
 
-    /**
-     * Fetch words.
-     *
-     * @return void
-     * @author Bhavesh Vyas
-     */
-    public function fetchWords()
-    {
-        $this->allMots = $this->finalWords = [];
+    if ($this->step != 6) {
+        $this->step++;
+    }
+}
 
-        if ($this->levelId != '' && $this->themeId != '' && $this->categoryId != '') {
+	//(FR) Récupération de tout les mots
+	//(EN) Recovery of all words
 
-            $levelId       = $this->levelId;
-            $themeId       = $this->themeId;
-            $categoryId    = $this->categoryId;
-            $subCategoryId = ($this->subCategoryId == '') ? 0 : $this->subCategoryId;
-            $tempsId       = $this->tempsOption;
 
-            $motBySubCategories = Mot::select("id", "nom", "traduction")
-                ->where('theme_id', $themeId)
-                ->where('category_id', $categoryId)
-                ->where('levels', 'like', '%' . $levelId . '%');
-            if ($subCategoryId != 0) {
-                $motBySubCategories->where('sub_category_id', $subCategoryId);
+public function fetchWords()
+{
+    $this->allMots = $this->finalWords = [];
+
+    if (!empty($this->levelId) && !empty($this->themeId)) {
+        $query = Mot::select("id", "nom", "traduction")
+            ->where('theme_id', $this->themeId)
+            ->where('levels', 'like', '%' . $this->levelId . '%');
+
+        // Ajouter des filtres de catégorie et sous-catégorie uniquement s'ils sont présents
+        if (!empty($this->categoryId)) {
+            $query->where('category_id', $this->categoryId);
+        }
+
+        if (!empty($this->subCategoryId)) {
+            $query->where('sub_category_id', $this->subCategoryId);
+        }
+
+        $finalWords = $query->get()->toArray();
+
+        if (!empty($finalWords)) {
+            $this->allMots = array_column($finalWords, 'id');
+            foreach ($finalWords as $word) {
+                $this->finalWords[$word['id']] = $word;
             }
-
-            if ($motBySubCategories->count() > 0) {
-                $firstResult  = clone $motBySubCategories;
-                $secondResult = clone $motBySubCategories;
-
-                $this->allMots = $firstResult->pluck('id', 'id')->all();
-                $finalWords    = $secondResult->get()->toArray();
-
-                foreach ($finalWords as $key => $value) {
-                    $this->finalWords[$value['id']] = $value;
-                }
-
-                $this->getCurrentWord();
-            }
+            $this->getCurrentWord();
+        } else {
+            $this->step = 6;
+            $this->initializeGame();
         }
     }
+}
 
-    /**
-     * Undocumented function
-     *
-     * @return void
-     * @author Bhavesh Vyas
-     */
+
+
+	//(FR) Mot Courant
+	//(EN) Common Word
+
+public function getCurrentWord()
+{
+    if (!empty($this->allMots)) {
+        $randId = array_rand($this->allMots, 1);
+        $wordId = $this->allMots[$randId];
+
+        if (isset($this->finalWords[$wordId])) {
+            $final = $this->finalWords[$wordId];
+            $this->currentWord = $final['nom'];
+            $this->currentTranslation = $final['traduction'];
+            $this->currentWordId = $final['id'];
+            $this->currentAudio = $final['audioblob'] ?? null;
+
+            // Ajouter un log pour vérifier le contenu de $this->currentAudio
+            Log::info('Current audio: ' . print_r($this->currentAudio, true));
+
+            unset($this->allMots[$randId]);
+        }
+    } else {
+        // Gérer le cas où il n'y a plus de mots à afficher
+        $this->endGame();
+    }
+}
+
+		// (FR) Affiche la réponse + fonction retour en arrière
+		// (EN) Displays the answer + backtrack function
+
     public function showNewAnswer()
     {
         $this->showAnswer = true;
@@ -169,72 +278,50 @@ class MyGameComponent extends Component
         $this->step = $step;
     }
 
-    /**
-     * Mettre à jour la probabilité d'apparition d'un mot
-     *
-     * @param integer $motId
-     * @param string $reaction
-     * @return void
-     * @author Bhavesh Vyas
-     */
+	//(FR) Mise à jour des probabilitées
+	//(EN) Update of probabilities
+	
     public function updateProbability(string $reaction)
     {
         $userWordProbability = UserWordProbability::where('user_id', $this->userId)
             ->where('mot_id', $this->currentWordId)
             ->first();
 
-        if (!$userWordProbability) {
-            $currentProbability                             = 50;
-            $userWordProbability                            = new UserWordProbability();
-            $userWordProbability->user_id                   = $this->userId;
-            $userWordProbability->mot_id                    = $this->currentWordId;
-            $userWordProbability->probability_of_appearance = $currentProbability;
-            $userWordProbability->know_level                = $this->knowLevel;
-            $userWordProbability->dont_know_level           = $this->dontKnowLevel;
-            if ($reaction == 'know') {
-                // Decreases the probability of the word appearing by $this->knowlevel %, down to a minimum of 1%.
-                // find the $this->knowlevel % of the current probability
-                $newProbability = $currentProbability - ($currentProbability * $this->knowLevel / 100);
-            } elseif ($reaction == 'dont_know') {
-                // Increases the probability of the word appearing to $this->dontKnowLevel %.
-                $newProbability = $currentProbability + ($currentProbability * $this->dontKnowLevel / 100);
-            } else if ($reaction == 'dont_want_to_learn') {
-                $newProbability = 0;
-            }
+        $currentProbability = $userWordProbability->probability_of_appearance ?? 50;
 
-            $userWordProbability->probability_of_appearance = $newProbability;
-            $userWordProbability->updated_at                = now();
-            $userWordProbability->save();
+        if ($reaction == 'know') {
+            $newProbability = $currentProbability - ($currentProbability * $this->knowLevel / 100);
+            $this->knewWordClicks++;
+        } elseif ($reaction == 'dont_know') {
+            $newProbability = $currentProbability + ($currentProbability * $this->dontKnowLevel / 100);
+            $this->didntKnowWordClicks++;
+        } else if ($reaction == 'dont_want_to_learn') {
+            $newProbability = 0;
+            $this->dontWantToLearnClicks++;
         }
 
+        if (!$userWordProbability) {
+            $userWordProbability = new UserWordProbability();
+            $userWordProbability->user_id = $this->userId;
+            $userWordProbability->mot_id = $this->currentWordId;
+            $userWordProbability->probability_of_appearance = $newProbability;
+            $userWordProbability->know_level = $this->knowLevel;
+            $userWordProbability->dont_know_level = $this->dontKnowLevel;
+        } else {
+            $userWordProbability->probability_of_appearance = $newProbability;
+        }
+
+        $userWordProbability->updated_at = now();
+        $userWordProbability->save();
+
+        $this->totalWords++;
         $this->showAnswer = false;
         $this->getCurrentWord();
     }
 
-    /**
-     * Get the current word.
-     *
-     * @return void
-     * @author Bhavesh Vyas
-     */
-    public function getCurrentWord()
-    {
-        $randId = array_rand($this->allMots, 1);
-        if (isset($this->finalWords[$randId])) {
-            $final                    = $this->finalWords[$randId];
-            $this->currentWord        = $final['nom'];
-            $this->currentTranslation = $final['traduction'];
-            $this->currentWordId      = $final['id'];
-            unset($this->finalWords[$randId]);
-        }
-    }
-
-    /**
-     * Gérer la fin du jeu
-     *
-     * @return void
-     * @author Bhavesh Vyas
-     */
+	//(FR) Fonction Fin du jeu
+	//(EN) End of game function
+	
     public function finalWord($themeId)
     {
         $finalWords = Mot::select("id", "nom", "traduction")
@@ -246,12 +333,6 @@ class MyGameComponent extends Component
         }
     }
 
-    /**
-     * Render the component.
-     *
-     * @return void
-     * @author Bhavesh Vyas
-     */
     public function render()
     {
         return view('livewire.my-game-component')
