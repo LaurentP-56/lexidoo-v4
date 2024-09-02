@@ -41,7 +41,8 @@ Route::get('/', function () {
     // dd("here");
     return view('welcome');
 });
-
+Route::get('/generate-audios', [GoogleTextToSpeechController::class, 'generateMissingAudios'])->name('generate.audios');
+Route::get('/auth/callback/{provider}', 'App\Http\Controllers\SocialController@Callback');
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
