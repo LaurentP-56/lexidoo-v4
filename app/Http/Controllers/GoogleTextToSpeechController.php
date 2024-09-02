@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\Mot;
 use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
 use Google\Cloud\Translate\TranslateClient;
@@ -15,12 +16,12 @@ class GoogleTextToSpeechController extends Controller
     public function __construct()
     {
         try {
-            $credentialsPath = storage_path('app/lexidoo-credentials.json');
+            $credentialsPath          = storage_path('app/lexidoo-credentials.json');
             $this->textToSpeechClient = new TextToSpeechClient([
-                'credentials' => json_decode(file_get_contents($credentialsPath), true)
+                'credentials' => json_decode(file_get_contents($credentialsPath), true),
             ]);
             $this->translateClient = new TranslateClient([
-                'credentials' => json_decode(file_get_contents($credentialsPath), true)
+                'credentials' => json_decode(file_get_contents($credentialsPath), true),
             ]);
             Log::info('TextToSpeechClient et TranslateClient initialisés avec succès.');
         } catch (\Exception $e) {
@@ -28,50 +29,47 @@ class GoogleTextToSpeechController extends Controller
         }
     }
 
-public function generateMissingAudios()
-{
-    $mots_without_audio = Mot::whereNull("audioblob")->get();
-    Log::info('Nombre de mots sans audio : ' . $mots_without_audio->count());
-    Log::info('Requête SQL générée : ' . Mot::whereNull("audioblob")->toSql());
+    public function generateMissingAudios()
+    {
+        $mots_without_audio = Mot::whereNull("audioblob")->get();
+        Log::info('Nombre de mots sans audio : ' . $mots_without_audio->count());
+        Log::info('Requête SQL générée : ' . Mot::whereNull("audioblob")->toSql());
 
-    foreach ($mots_without_audio as $mot) {
-        ini_set('max_execution_time', 0);
+        foreach ($mots_without_audio as $mot) {
+            ini_set('max_execution_time', 0);
 
-        Log::info('Traitement du mot : ' . $mot->nom . ' (ID : ' . $mot->id . ')');
+            Log::info('Traitement du mot : ' . $mot->nom . ' (ID : ' . $mot->id . ')');
 
-        $translatedText = $this->translateText($mot->nom, 'en-GB');
+            $translatedText = $this->translateText($mot->nom, 'en-GB');
 
-        if ($translatedText) {
-            Log::info('Mot traduit : ' . $translatedText);
+            if ($translatedText) {
+                Log::info('Mot traduit : ' . $translatedText);
 
-            $audioContent = $this->generateAudioOfString($translatedText);
+                $audioContent = $this->generateAudioOfString($translatedText);
 
-            if ($audioContent) {
-                Log::info('Audio généré pour le mot traduit : ' . $translatedText . ' - Taille : ' . strlen($audioContent));
+                if ($audioContent) {
+                    Log::info('Audio généré pour le mot traduit : ' . $translatedText . ' - Taille : ' . strlen($audioContent));
 
-                // Stocker le fichier audio sous forme de BLOB dans la base de données
-                $mot->audioblob = $audioContent;
+                    // Stocker le fichier audio sous forme de BLOB dans la base de données
+                    $mot->audioblob = $audioContent;
 
-                // Vérifie si l'audio est bien en train d'être sauvegardé
-                if ($mot->save()) {
-                    Log::info('Audio enregistré avec succès pour le mot traduit : ' . $translatedText);
-                    Log::info('Objet Mot mis à jour : ' . print_r($mot->toArray(), true));
+                    // Vérifie si l'audio est bien en train d'être sauvegardé
+                    if ($mot->save()) {
+                        Log::info('Audio enregistré avec succès pour le mot traduit : ' . $translatedText);
+                        Log::info('Objet Mot mis à jour : ' . print_r($mot->toArray(), true));
+                    } else {
+                        Log::error('Échec de l\'enregistrement de l\'audio pour le mot traduit : ' . $translatedText);
+                    }
                 } else {
-                    Log::error('Échec de l\'enregistrement de l\'audio pour le mot traduit : ' . $translatedText);
+                    Log::error('L\'audio n\'a pas pu être généré pour le mot traduit : ' . $translatedText);
                 }
             } else {
-                Log::error('L\'audio n\'a pas pu être généré pour le mot traduit : ' . $translatedText);
+                Log::error('La traduction n\'a pas pu être générée pour le mot : ' . $mot->nom);
             }
-        } else {
-            Log::error('La traduction n\'a pas pu être générée pour le mot : ' . $mot->nom);
         }
+
+        return response()->json(['message' => 'Audios générés avec succès.'], 200);
     }
-
-    return response()->json(['message' => 'Audios générés avec succès.'], 200);
-}
-
-
-
 
     public function generateAudioOfString($str)
     {

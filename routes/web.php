@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\GoogleTextToSpeechController;
 use App\Http\Controllers\JeuController;
 use App\Http\Controllers\LevelsController;
 use App\Http\Controllers\MotsController;
