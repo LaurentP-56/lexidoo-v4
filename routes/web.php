@@ -28,18 +28,6 @@ use Illuminate\Support\Facades\Route;
  */
 
 Route::get('/', function () {
-    // $user           = new App\Models\User();
-    // $user->nom      = "Bhavesh";
-    // $user->prenom   = "Vyas";
-    // $user->email    = "bhaveshvyas23@gmail.com";
-    // $user->password = Hash::make('admin12345');
-    // $user->isAdmin  = 1;
-    // $user->premium  = 0;
-    // $user->tel      = "8460177472";
-    // $user->adresse  = "pune";
-    // $user->save();
-    // dd($user);
-    // dd("here");
     return view('welcome');
 });
 Route::get('/generate-audios', [GoogleTextToSpeechController::class, 'generateMissingAudios'])->name('generate.audios');
